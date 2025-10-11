@@ -1,0 +1,140 @@
+# Polymarket Agents Strategy Configuration
+# Optimized for Perplexity Sonar Deep Research (€0.17 per call)
+
+capital:
+  initial: 50.0
+  test_period_days: 7
+  allocation:
+    conservative: 0.333  # €16.67
+    balanced: 0.333      # €16.67
+    aggressive: 0.334     # €16.66
+
+research:
+  # PRIMARY: Perplexity Sonar Deep Research
+  model: "sonar-deep-research"  # Perplexity
+  parser_model: "gpt-4o-mini"    # For structuring output
+  
+  # With Perplexity, we can afford MANY more research calls!
+  max_events_per_week:
+    conservative: 7   # 7 events per week
+    balanced: 10      # 10 events per week
+    aggressive: 10    # 10 events per week
+  
+  # Total: 27 events/week = €4.59/week
+  # Can analyze 54-135 markets (2-5 markets per event)
+  
+  # Research caching
+  cache_hours: 24
+  cache_directory: "./research_cache"
+  
+  # Event selection criteria (lower thresholds now affordable)
+  min_event_volume: 25000  # $25k minimum volume
+  min_days_to_resolution: 3  # At least 3 days out
+  
+  # Search providers (fallback if needed)
+  search_providers:
+    - serper  # Primary (cheaper)
+    - serpapi # Fallback
+  
+  # Scraping provider
+  scraping_provider: "scrapfly"  # For webpage scraping
+
+risk_management:
+  # Position limits
+  max_position_size: 0.30  # Max 30% per position
+  max_total_allocation: 0.90  # Max 90% total allocation
+  max_drawdown_threshold: 0.20  # Max 20% drawdown
+  
+  # Kelly Criterion safety factors
+  kelly_safety_factors:
+    conservative: 0.25  # Very conservative
+    balanced: 0.50      # Moderate
+    aggressive: 0.75    # Aggressive
+  
+  # Risk monitoring
+  var_confidence: 0.95  # Value at Risk confidence level
+  min_sharpe_ratio: 0.5  # Minimum acceptable Sharpe ratio
+
+strategies:
+  conservative:
+    min_confidence: 7
+    max_events: 7
+    max_markets: 15
+    reserve_capital: 0.30
+    max_position_size: 0.15
+    max_total_allocation: 0.70
+    description: "Capital preservation with steady, low-risk returns"
+    target_sharpe: 1.0
+    target_max_drawdown: 0.10
+  
+  balanced:
+    min_confidence: 5
+    max_events: 10
+    max_markets: 25
+    reserve_capital: 0.20
+    max_position_size: 0.20
+    max_total_allocation: 0.80
+    description: "Optimal risk-adjusted returns with moderate risk"
+    target_sharpe: 1.5
+    target_max_drawdown: 0.15
+  
+  aggressive:
+    min_confidence: 4
+    max_events: 10
+    max_markets: 25
+    reserve_capital: 0.10
+    max_position_size: 0.30
+    max_total_allocation: 0.90
+    description: "Maximum returns with higher risk tolerance"
+    target_sharpe: 2.0
+    target_max_drawdown: 0.20
+
+# Cost tracking (MUCH CHEAPER with Perplexity!)
+costs:
+  perplexity_per_call: 0.17  # EUR per research call
+  parser_per_call: 0.02      # EUR for structured parsing
+  weekly_budget: 20           # EUR maximum per week (very conservative)
+  
+  # Estimated weekly costs:
+  # Conservative: 7 calls × €0.17 = €1.19
+  # Balanced: 10 calls × €0.17 = €1.70
+  # Aggressive: 10 calls × €0.17 = €1.70
+  # Total: €4.59/week (vs €800/week with OpenAI o3-deep-research!)
+
+# Performance targets
+performance_targets:
+  min_sharpe_ratio: 1.0
+  min_win_rate: 0.60
+  max_brier_score: 0.25
+  min_cost_efficiency: 2.0  # Return per euro spent
+
+# Logging configuration
+logging:
+  level: "INFO"
+  file: "logs/polymarket_agents.log"
+  max_size: "10MB"
+  backup_count: 5
+
+# API configuration
+apis:
+  polymarket:
+    gamma_url: "https://gamma-api.polymarket.com"
+    clob_url: "https://clob.polymarket.com"
+    timeout: 30
+  
+  perplexity:
+    url: "https://api.perplexity.ai/chat/completions"
+    timeout: 300  # 5 minutes for deep research
+    max_retries: 3
+  
+  openai:
+    timeout: 60
+    max_retries: 3
+
+# Testing configuration
+testing:
+  paper_trading: true
+  save_results: true
+  results_directory: "./test_results"
+  generate_reports: true
+  email_reports: false
