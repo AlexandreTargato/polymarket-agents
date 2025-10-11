@@ -1,6 +1,27 @@
-FROM python:3.9
+FROM python:3.9-slim
 
-COPY . /home
-WORKDIR /home
+# Set working directory
+WORKDIR /app
 
-RUN pip3 install -r requirements.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY agents/ ./agents/
+COPY main.py .
+
+# Create directories for logs and data
+RUN mkdir -p logs data/logs
+
+# Set Python path
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Default command (run once)
+CMD ["python", "main.py"]
