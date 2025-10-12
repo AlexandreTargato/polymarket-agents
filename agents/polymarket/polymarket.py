@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 
 from web3 import Web3
 from web3.constants import MAX_INT
-from web3.middleware import geth_poa_middleware
 
 import httpx
 from py_clob_client.client import ClobClient
@@ -57,7 +56,7 @@ class Polymarket:
         self.ctf_address = "0x4D97DCd97eC945f40cF65F87097ACe5EA0476045"
 
         self.web3 = Web3(Web3.HTTPProvider(self.polygon_rpc))
-        self.web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+        # POA middleware not needed for Polygon mainnet
 
         self.usdc = self.web3.eth.contract(
             address=self.usdc_address, abi=self.erc20_approve
@@ -285,6 +284,11 @@ class Polymarket:
     def get_all_tradeable_events(self) -> "list[SimpleEvent]":
         all_events = self.get_all_events()
         return self.filter_events_for_trading(all_events)
+
+    def get_all_tradeable_markets(self) -> "list[SimpleMarket]":
+        """Get all tradeable markets for human-in-the-loop system"""
+        all_markets = self.get_all_markets()
+        return self.filter_markets_for_trading(all_markets)
 
     def get_sampling_simplified_markets(self) -> "list[SimpleEvent]":
         markets = []
