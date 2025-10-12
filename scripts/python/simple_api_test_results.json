@@ -1,0 +1,31 @@
+{
+  "perplexity_direct": {
+    "status": "error",
+    "error": "HTTPSConnectionPool(host='api.perplexity.ai', port=443): Read timed out. (read timeout=30)",
+    "details": {
+      "api_key_present": true,
+      "api_key_length": 53
+    }
+  },
+  "polygon_wallet": {
+    "status": "success",
+    "details": {
+      "key_present": true,
+      "key_length": 66,
+      "key_format_valid": true,
+      "wallet_initialized": true,
+      "usdc_balance": 0.0,
+      "balance_retrieval_successful": true
+    }
+  },
+  "polymarket_api": {
+    "status": "success",
+    "details": {
+      "clob_client_initialized": true,
+      "api_creds_created": true,
+      "market_data_retrieval_successful": true,
+      "markets_count": 4
+    }
+  },
+  "timestamp": "2025-10-11T13:54:21.076216"
+}
