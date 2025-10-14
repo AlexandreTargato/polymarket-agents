@@ -1,0 +1,16 @@
+{
+  "run_date": "2025-10-12 12:33:16.307255+00:00",
+  "run_start_time": "2025-10-12 12:33:16.307255+00:00",
+  "run_end_time": "2025-10-12 12:33:17.515269+00:00",
+  "markets_fetched": 0,
+  "markets_after_filtering": 0,
+  "markets_tier1_researched": 0,
+  "markets_tier2_researched": 0,
+  "opportunities_identified": 0,
+  "total_cost": 0.0,
+  "opportunities": [],
+  "errors": [],
+  "timing": {
+    "total_duration": 1.2080047130584717
+  }
+}

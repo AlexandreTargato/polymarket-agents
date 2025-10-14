@@ -1,0 +1,19 @@
+meta {
+  name: getMarket
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://gamma-api.polymarket.com/markets/553810?include_tag=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  include_tag: true
+}
+
+settings {
+  encodeUrl: false
+}

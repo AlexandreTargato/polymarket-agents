@@ -1,29 +1,50 @@
+# Python virtual environments
 .venv
-.env
-.idea
-.ipynb_checkpoints
-.mypy_cache
-.vscode
-__pycache__
-.pytest_cache
-htmlcov
-dist
-site
-.coverage
-coverage.xml
-.netlify
-test.db
-log.txt
-Pipfile.lock
-env3.*
-env
-docs_build
-site_build
 venv
-docs.zip
-archive.zip
+env
+env3.*
+
+# Environment variables
+.env
+
+# IDE and editor files
+.idea
+.vscode
 *~
 .*.sw?
-.cache
-.DS_Store
+
+# Python cache and compiled files
+__pycache__
+.mypy_cache
+.ipynb_checkpoints
+
+# Testing and coverage
+.pytest_cache
+htmlcov
+.coverage
+coverage.xml
+
+# Build and distribution
+dist
+site
+docs_build
+site_build
+docs.zip
+archive.zip
+
+# Dependencies
+Pipfile.lock
+
+# Deployment
+.netlify
+
+# Database files
+test.db
 local_db*
+
+# Logs and temporary files
+/logs
+.cache
+
+# OS files
+.DS_Store

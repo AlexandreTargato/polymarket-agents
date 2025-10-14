@@ -1,242 +1,324 @@
-<!-- PROJECT SHIELDS -->
+# Polymarket Trading Agent - Research System
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+An automated research system that identifies potential trading opportunities on Polymarket by comparing AI-powered deep research findings against current market pricing.
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/polymarket/agents">
-    <img src="docs/images/cli.png" alt="Logo" width="466" height="262">
-  </a>
+## Overview
 
-<h3 align="center">Polymarket Agents</h3>
-
-  <p align="center">
-    Trade autonomously on Polymarket using AI Agents
-    <br />
-    <a href="https://github.com/polymarket/agents"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/polymarket/agents">View Demo</a>
-    ·
-    <a href="https://github.com/polymarket/agents/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/polymarket/agents/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
-</div>
-
-<!-- CONTENT -->
-
-# Polymarket Agents
-
-Polymarket Agents is a developer framework and set of utilities for building AI agents for Polymarket.
-
-This code is free and publicly available under MIT License open source license ([terms of service](#terms-of-service))!
-
-## Features
-
-- Integration with Polymarket API
-- AI agent utilities for prediction markets
-- Local and remote RAG (Retrieval-Augmented Generation) support
-- Data sourcing from betting services, news providers, and web search
-- Comphrehensive LLM tools for prompt engineering
-
-# Getting started
-
-## Quick Start with Docker (Recommended)
-
-The easiest way to get started is using Docker, which handles all Python dependencies and environment setup automatically.
-
-1. Clone the repository
-
-   ```
-   git clone https://github.com/{username}/polymarket-agents.git
-   cd polymarket-agents
-   ```
-
-2. Build the Docker image
-
-   ```
-   ./scripts/bash/build-docker.sh
-   ```
-
-3. Set up your environment variables:
-
-   - Create a `.env` file in the project root directory
-
-   ```
-   cp .env.example .env
-   ```
-
-   - Add the following environment variables:
-
-   ```
-   POLYGON_WALLET_PRIVATE_KEY=""
-   OPENAI_API_KEY=""
-   ```
-
-4. Load your wallet with USDC.
-
-5. Run the application in Docker
-
-   **For development (with volume mounting for live code changes):**
-
-   ```
-   ./scripts/bash/run-docker-dev.sh
-   ```
-
-   **For production:**
-
-   ```
-   ./scripts/bash/run-docker.sh
-   ```
-
-6. Try the command line interface...
-
-   ```
-   python scripts/python/cli.py
-   ```
-
-   Or just go trade!
-
-   ```
-   python agents/application/trade.py
-   ```
-
-## Manual Setup (Alternative)
-
-If you prefer to run the application locally without Docker, follow these steps:
-
-**Note:** This repo is intended for use with Python 3.9
-
-1. Create the virtual environment
-
-   ```
-   virtualenv --python=python3.9 .venv
-   ```
-
-2. Activate the virtual environment
-
-   - On Windows:
-
-   ```
-   .venv\Scripts\activate
-   ```
-
-   - On macOS and Linux:
-
-   ```
-   source .venv/bin/activate
-   ```
-
-3. Install the required dependencies:
-
-   ```
-   pip install -r requirements.txt
-   ```
-
-4. Set the PYTHONPATH environment variable:
-
-   ```
-   export PYTHONPATH="."
-   ```
-
-5. Follow steps 3-6 from the Docker setup above for environment variables and running the application.
+This agent performs daily automated research on Polymarket prediction markets and sends a comprehensive email report at 9:00 AM with actionable insights. The system is designed to exploit information asymmetry by systematically researching questions that require deep analysis.
 
 ## Architecture
 
-The Polymarket Agents architecture features modular components that can be maintained and extended by individual community members.
+The system implements a 7-stage pipeline:
 
-### APIs
+1. **Market Fetching** - Retrieve active markets from Polymarket API
+2. **Multi-Stage Filtering** - Apply 5 filters to narrow down to 15-25 markets
+3. **Tier 1 Research** - Fast context gathering (60-90s per market)
+4. **Tier 2 Research** - Deep analysis (5-10 min per market)
+5. **Opportunity Analysis** - Calculate edge, confidence, and opportunity scores
+6. **Report Generation** - Create HTML email report
+7. **Delivery & Logging** - Send email and log results
 
-Polymarket Agents connectors standardize data sources and order types.
+## Features
 
-- `Chroma.py`: chroma DB for vectorizing news sources and other API data. Developers are able to add their own vector database implementations.
+- **Intelligent Filtering**: Multi-stage filtering based on volume, liquidity, time horizon, category, and market maturity
+- **Two-Tier Research**: Fast initial screening followed by deep analysis for promising markets
+- **Source Quality Assessment**: Automatic credibility scoring and source diversity analysis
+- **Confidence Scoring**: Multi-factor confidence calculation considering source quality, recency, consensus, and reasoning
+- **Risk Analysis**: Identifies red flags and green flags for each opportunity
+- **HTML Email Reports**: Beautiful, mobile-responsive email reports with detailed findings
+- **Data Logging**: Tracks all runs for performance analysis and model improvement
+- **Cost Tracking**: Estimates and monitors daily API costs
 
-- `Gamma.py`: defines `GammaMarketClient` class, which interfaces with the Polymarket Gamma API to fetch and parse market and event metadata. Methods to retrieve current and tradable markets, as well as defined information on specific markets and events.
+## Quick Start
 
-- `Polymarket.py`: defines a Polymarket class that interacts with the Polymarket API to retrieve and manage market and event data, and to execute orders on the Polymarket DEX. It includes methods for API key initialization, market and event data retrieval, and trade execution. The file also provides utility functions for building and signing orders, as well as examples for testing API interactions.
+### 1. Setup Environment
 
-- `Objects.py`: data models using Pydantic; representations for trades, markets, events, and related entities.
+```bash
+# Clone the repository
+git clone <repository-url>
+cd agents
 
-### Scripts
+# Create virtual environment
+python3.9 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-Files for managing your local environment, server set-up to run the application remotely, and cli for end-user commands.
-
-`cli.py` is the primary user interface for the repo. Users can run various commands to interact with the Polymarket API, retrieve relevant news articles, query local data, send data/prompts to LLMs, and execute trades in Polymarkets.
-
-Commands should follow this format:
-
-`python scripts/python/cli.py command_name [attribute value] [attribute value]`
-
-Example:
-
-`get-all-markets`
-Retrieve and display a list of markets from Polymarket, sorted by volume.
-
-```
-python scripts/python/cli.py get-all-markets --limit <LIMIT> --sort-by <SORT_BY>
-```
-
-- limit: The number of markets to retrieve (default: 5).
-- sort_by: The sorting criterion, either volume (default) or another valid attribute.
-
-# Contributing
-
-If you would like to contribute to this project, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes.
-4. Submit a pull request.
-
-Please run pre-commit hooks before making contributions. To initialize them:
-
-```
-pre-commit install
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-# Related Repos
+### 2. Configure Environment Variables
 
-- [py-clob-client](https://github.com/Polymarket/py-clob-client): Python client for the Polymarket CLOB
-- [python-order-utils](https://github.com/Polymarket/python-order-utils): Python utilities to generate and sign orders from Polymarket's CLOB
-- [Polymarket CLOB client](https://github.com/Polymarket/clob-client): Typescript client for Polymarket CLOB
-- [Langchain](https://github.com/langchain-ai/langchain): Utility for building context-aware reasoning applications
-- [Chroma](https://docs.trychroma.com/getting-started): Chroma is an AI-native open-source vector database
+Create a `.env` file:
 
-# Prediction markets reading
+```bash
+cp .env.example .env
+```
 
-- Prediction Markets: Bottlenecks and the Next Major Unlocks, Mikey 0x: https://mirror.xyz/1kx.eth/jnQhA56Kx9p3RODKiGzqzHGGEODpbskivUUNdd7hwh0
-- The promise and challenges of crypto + AI applications, Vitalik Buterin: https://vitalik.eth.limo/general/2024/01/30/cryptoai.html
-- Superforecasting: How to Upgrade Your Company's Judgement, Schoemaker and Tetlock: https://hbr.org/2016/05/superforecasting-how-to-upgrade-your-companys-judgment
+Edit `.env` and add your API keys:
 
-# License
+```
+# Required
+ANTHROPIC_API_KEY="your-anthropic-key"
+TAVILY_API_KEY="your-tavily-key"
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/Polymarket/agents/blob/main/LICENSE.md) file for details.
+# For email reports
+EMAIL_SMTP_USERNAME="your-email@gmail.com"
+EMAIL_SMTP_PASSWORD="your-app-password"
+EMAIL_FROM="your-email@gmail.com"
+EMAIL_TO="recipient@email.com"
+```
 
-# Contact
+**Getting API Keys:**
+- Anthropic: https://console.anthropic.com/
+- Tavily: https://tavily.com/
 
-For any questions or inquiries, please contact liam@polymarket.com or reach out at www.greenestreet.xyz
+**For Gmail:**
+1. Enable 2-factor authentication
+2. Generate an app password: https://myaccount.google.com/apppasswords
+3. Use the app password in EMAIL_SMTP_PASSWORD
 
-Enjoy using the CLI application! If you encounter any issues, feel free to open an issue on the repository.
+### 3. Run the Agent
 
-# Terms of Service
+```bash
+# Run once (for testing)
+python main.py
 
-[Terms of Service](https://polymarket.com/tos) prohibit US persons and persons from certain other jurisdictions from trading on Polymarket (via UI & API and including agents developed by persons in restricted jurisdictions), although data and information is viewable globally.
+# Run on daily schedule (8:00 AM analysis, 9:00 AM email)
+python main.py --schedule
 
-<!-- LINKS -->
+# Test mode (faster, limited markets)
+python main.py --test
+```
 
-[contributors-shield]: https://img.shields.io/github/contributors/polymarket/agents?style=for-the-badge
-[contributors-url]: https://github.com/polymarket/agents/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/polymarket/agents?style=for-the-badge
-[forks-url]: https://github.com/polymarket/agents/network/members
-[stars-shield]: https://img.shields.io/github/stars/polymarket/agents?style=for-the-badge
-[stars-url]: https://github.com/polymarket/agents/stargazers
-[issues-shield]: https://img.shields.io/github/issues/polymarket/agents?style=for-the-badge
-[issues-url]: https://github.com/polymarket/agents/issues
-[license-shield]: https://img.shields.io/github/license/polymarket/agents?style=for-the-badge
-[license-url]: https://github.com/polymarket/agents/blob/master/LICENSE.md
+## Docker Deployment
+
+### Build the Image
+
+```bash
+docker build -t polymarket-agent .
+```
+
+### Run Once
+
+```bash
+docker run --env-file .env polymarket-agent
+```
+
+### Run on Schedule
+
+```bash
+docker run -d \
+  --name polymarket-agent \
+  --env-file .env \
+  --restart unless-stopped \
+  polymarket-agent \
+  python main.py --schedule
+```
+
+### View Logs
+
+```bash
+docker logs -f polymarket-agent
+```
+
+## Project Structure
+
+```
+agents/
+├── agents/
+│   ├── config.py              # Configuration management
+│   ├── models.py              # Pydantic data models
+│   ├── orchestrator.py        # Main workflow orchestrator
+│   ├── scheduler.py           # Daily scheduler
+│   └── stages/
+│       ├── market_fetcher.py      # Stage 1: Fetch markets
+│       ├── market_filter.py       # Stage 2: Filter markets
+│       ├── tier1_research.py      # Stage 3: Fast research
+│       ├── tier2_research.py      # Stage 4: Deep research
+│       ├── opportunity_analyzer.py # Stage 5: Scoring
+│       ├── report_generator.py    # Stage 6: HTML reports
+│       └── email_sender.py        # Stage 7: Email & logging
+├── main.py                    # Entry point
+├── requirements.txt           # Dependencies
+├── Dockerfile                 # Docker configuration
+└── .env.example              # Environment template
+```
+
+## Configuration
+
+The system is highly configurable via `agents/config.py`. Key settings:
+
+### Filtering Criteria
+- `min_volume`: $10,000 (minimum market volume)
+- `min_liquidity`: $5,000 (minimum liquidity)
+- `min_resolution_days`: 7 days
+- `max_resolution_days`: 30 days
+- `focus_categories`: Politics, Business, Technology, Regulatory
+
+### Research Settings
+- `tier1_model`: "claude-3-5-haiku-20241022" (fast analysis)
+- `tier2_model`: "claude-3-5-sonnet-20241022" (deep analysis)
+- `tier1_queries_per_market`: 3
+- `tier2_queries_per_market`: 8
+
+### Opportunity Thresholds
+- `min_edge_for_report`: 5% (minimum edge to report)
+- `min_confidence_score`: 0.5 (minimum confidence)
+- `min_opportunity_score`: 0.03 (minimum overall score)
+
+### Scheduling
+- `cron_hour`: 8 (run at 8:00 AM)
+- `send_time_hour`: 9 (email at 9:00 AM)
+- `max_daily_cost`: $50 (cost cap)
+
+## Cost Estimates
+
+Typical daily costs with Anthropic Claude:
+- **Tier 1 Research** (20 markets): ~$0.04 (Claude 3.5 Haiku)
+- **Tier 2 Research** (6 markets): ~$0.24 (Claude 3.5 Sonnet)
+- **Tavily Searches**: ~$0.10
+- **Total**: ~$0.40/day (~$12/month)
+
+## Filtering Pipeline
+
+The system applies 5 sequential filters:
+
+1. **Volume & Liquidity**: Ensures tradeable markets
+2. **Time Horizon**: 7-30 days until resolution
+3. **Category**: Focus on researchable categories
+4. **Question Type**: Binary/factual questions preferred
+5. **Market Maturity**: 12 hours to 2 weeks old
+
+Expected funnel: 500+ markets → 15-25 filtered markets → 5-8 deep research
+
+## Research Process
+
+### Tier 1 (Fast - 60-90s per market)
+1. Generate 2-3 targeted search queries
+2. Run web searches (last 7 days prioritized)
+3. Quick analysis with Claude 3.5 Haiku
+4. Decide if worth deep research
+
+### Tier 2 (Deep - 5-10 min per market)
+1. Generate 5-8 comprehensive queries (including contrarian)
+2. Multi-timeframe searches (7d, 30d, all time)
+3. Deep analysis with Claude 3.5 Sonnet using structured framework
+4. Probability estimation with confidence intervals
+5. Source quality assessment
+6. Risk analysis
+
+## Opportunity Scoring
+
+**Opportunity Score** = Edge × Confidence × Liquidity Factor
+
+Where:
+- **Edge** = |Model Probability - Market Probability|
+- **Confidence** = Weighted average of:
+  - Source Quality (25%)
+  - Information Recency (20%)
+  - Consensus Level (20%)
+  - Base Rate Alignment (20%)
+  - Reasoning Clarity (15%)
+- **Liquidity Factor** = min(1.0, liquidity / $10,000)
+
+## Email Reports
+
+Reports include:
+- **Executive Summary**: Key metrics and top opportunities
+- **High Priority Opportunities**: Detailed analysis with sources
+- **Medium Priority**: Condensed findings
+- **System Metrics**: Runtime, costs, errors
+
+Each opportunity shows:
+- Model vs Market probability
+- Edge and opportunity score
+- Key findings with sources
+- Reasoning and analysis
+- Red flags and green flags
+- Direct link to Polymarket
+
+## Data Logging
+
+All runs are logged to `data/logs/` as JSON files:
+- Full market and research data
+- Opportunity details and scores
+- Timing breakdown
+- Errors encountered
+
+Use logged data to:
+- Track model accuracy over time
+- Calculate Brier scores
+- Identify best question types
+- Refine filtering criteria
+
+## Best Practices
+
+### For Production
+1. Start with test mode to validate setup
+2. Monitor first few runs closely
+3. Set up cost alerts with your APIs
+4. Review email reports daily
+5. Track accuracy as markets resolve
+6. Adjust filters based on results
+
+### Safety Features
+- Hard cost caps prevent runaway spending
+- Extensive error handling and logging
+- Conservative probability estimates
+- Red flag identification
+- Human-in-the-loop (reports only, no auto-trading)
+
+## Troubleshooting
+
+### Email Not Sending
+- Verify SMTP credentials
+- Check firewall/network settings
+- For Gmail, ensure app password is used
+- Check logs for SMTP errors
+
+### High API Costs
+- Reduce `max_markets_to_filter`
+- Reduce `max_markets_for_deep_research`
+- Use cheaper models for Tier 1
+- Increase filtering thresholds
+
+### No Opportunities Found
+- Lower `min_edge_for_report`
+- Lower `min_confidence_score`
+- Expand `focus_categories`
+- Adjust time horizon
+
+## Future Enhancements
+
+- Real-time monitoring for major price swings
+- Category-specific research templates
+- Automated outcome tracking
+- Performance attribution analysis
+- Integration with DeFi protocols for execution
+- Machine learning for filter optimization
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+MIT License - see [LICENSE.md](LICENSE.md)
+
+## Disclaimer
+
+This system provides research and analysis only. It does not provide financial advice. Always conduct your own due diligence before trading. Trading prediction markets involves risk. Past performance does not guarantee future results.
+
+Polymarket's Terms of Service prohibit trading by US persons and persons from certain other jurisdictions. Ensure you comply with all applicable laws and regulations.
+
+## Support
+
+For issues or questions:
+1. Check the logs in `logs/` directory
+2. Review data logs in `data/logs/`
+3. Open an issue on GitHub
+4. Consult the strategy document in `strategy/strategy.md`
+
+---
+
+**Generated with Claude Code** 🤖

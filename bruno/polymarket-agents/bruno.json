@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "polymarket-agents",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
