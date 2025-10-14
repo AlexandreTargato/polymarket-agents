@@ -58,7 +58,9 @@ class Orchestrator:
         run_date = datetime.now(timezone.utc)
 
         logger.info("=" * 80)
-        logger.info(f"Starting daily analysis run: {run_date.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        logger.info(
+            f"Starting daily analysis run: {run_date.strftime('%Y-%m-%d %H:%M:%S UTC')}"
+        )
         logger.info("=" * 80)
 
         errors = []
@@ -70,7 +72,9 @@ class Orchestrator:
             logger.info("\n[STAGE 1] Fetching markets...")
             markets = self.market_fetcher.fetch_all_markets()
             stage_duration = time.time() - stage_start
-            logger.info(f"✓ Stage 1 complete: {len(markets)} markets fetched ({stage_duration:.1f}s)")
+            logger.info(
+                f"✓ Stage 1 complete: {len(markets)} markets fetched ({stage_duration:.1f}s)"
+            )
 
             # Stage 2: Filter Markets
             stage_start = time.time()
@@ -79,22 +83,26 @@ class Orchestrator:
             stage_duration = time.time() - stage_start
 
             # Limit to configured maximum
-            max_markets = config.scheduler.max_markets_to_filter
-            if len(filtered_markets) > max_markets:
-                logger.info(f"Limiting to {max_markets} markets (from {len(filtered_markets)})")
-                # Sort by volume and take top N
-                filtered_markets = sorted(filtered_markets, key=lambda m: m.volume, reverse=True)[:max_markets]
+            filtered_markets = sorted(
+                filtered_markets, key=lambda m: m.volume, reverse=True
+            )[: config.scheduler.max_markets_to_filter]
 
-            logger.info(f"✓ Stage 2 complete: {len(filtered_markets)} markets after filtering ({stage_duration:.1f}s)")
+            logger.info(
+                f"✓ Stage 2 complete: {len(filtered_markets)} markets after filtering ({stage_duration:.1f}s)"
+            )
 
             # Stage 3: Tier 1 Research
             stage_start = time.time()
-            logger.info(f"\n[STAGE 3] Tier 1 research on {len(filtered_markets)} markets...")
+            logger.info(
+                f"\n[STAGE 3] Tier 1 research on {len(filtered_markets)} markets..."
+            )
             tier1_results = []
 
             for i, market in enumerate(filtered_markets, 1):
                 try:
-                    logger.info(f"  [{i}/{len(filtered_markets)}] Researching: {market.question[:60]}...")
+                    logger.info(
+                        f"  [{i}/{len(filtered_markets)}] Researching: {market.question[:60]}..."
+                    )
                     result = self.tier1_researcher.research_market(market)
                     tier1_results.append((market, result))
                 except Exception as e:
@@ -104,7 +112,9 @@ class Orchestrator:
 
             # Filter for Tier 2 candidates
             tier2_candidates = [
-                (market, result) for market, result in tier1_results if result.proceed_to_tier2
+                (market, result)
+                for market, result in tier1_results
+                if result.proceed_to_tier2
             ]
 
             stage_duration = time.time() - stage_start
@@ -125,12 +135,16 @@ class Orchestrator:
                     reverse=True,
                 )[:max_deep]
 
-            logger.info(f"\n[STAGE 4] Tier 2 deep research on {len(tier2_candidates)} markets...")
+            logger.info(
+                f"\n[STAGE 4] Tier 2 deep research on {len(tier2_candidates)} markets..."
+            )
             tier2_results = []
 
-            for i, (market, tier1_result) in enumerate(tier2_candidates, 1):
+            for i, (market, _) in enumerate(tier2_candidates, 1):
                 try:
-                    logger.info(f"  [{i}/{len(tier2_candidates)}] Deep research: {market.question[:60]}...")
+                    logger.info(
+                        f"  [{i}/{len(tier2_candidates)}] Deep research: {market.question[:60]}..."
+                    )
                     result = self.tier2_researcher.research_market(market)
                     tier2_results.append((market, result))
                 except Exception as e:
@@ -139,7 +153,9 @@ class Orchestrator:
                     errors.append(error_msg)
 
             stage_duration = time.time() - stage_start
-            logger.info(f"✓ Stage 4 complete: {len(tier2_results)} markets researched deeply ({stage_duration:.1f}s)")
+            logger.info(
+                f"✓ Stage 4 complete: {len(tier2_results)} markets researched deeply ({stage_duration:.1f}s)"
+            )
 
             # Stage 5: Opportunity Analysis
             stage_start = time.time()
@@ -147,11 +163,15 @@ class Orchestrator:
 
             for market, research in tier2_results:
                 try:
-                    opportunity = self.opportunity_analyzer.analyze_opportunity(market, research)
+                    opportunity = self.opportunity_analyzer.analyze_opportunity(
+                        market, research
+                    )
                     if opportunity:
                         opportunities.append(opportunity)
                 except Exception as e:
-                    error_msg = f"Opportunity analysis failed for market {market.id}: {e}"
+                    error_msg = (
+                        f"Opportunity analysis failed for market {market.id}: {e}"
+                    )
                     logger.error(error_msg)
                     errors.append(error_msg)
 
@@ -159,14 +179,18 @@ class Orchestrator:
             opportunities = self.opportunity_analyzer.rank_opportunities(opportunities)
 
             stage_duration = time.time() - stage_start
-            logger.info(f"✓ Stage 5 complete: {len(opportunities)} opportunities identified ({stage_duration:.1f}s)")
+            logger.info(
+                f"✓ Stage 5 complete: {len(opportunities)} opportunities identified ({stage_duration:.1f}s)"
+            )
 
             # Stage 6: Report Generation
             stage_start = time.time()
             logger.info("\n[STAGE 6] Generating report...")
 
             total_duration = time.time() - start_time
-            estimated_cost = self._estimate_cost(len(filtered_markets), len(tier2_results))
+            estimated_cost = self._estimate_cost(
+                len(filtered_markets), len(tier2_results)
+            )
 
             html_report = self.report_generator.generate_report(
                 opportunities=opportunities,
@@ -192,7 +216,9 @@ class Orchestrator:
             )
 
             if email_sent:
-                logger.info(f"✓ Stage 7 complete: Email sent ({time.time() - stage_start:.1f}s)")
+                logger.info(
+                    f"✓ Stage 7 complete: Email sent ({time.time() - stage_start:.1f}s)"
+                )
             else:
                 error_msg = "Failed to send email report"
                 logger.error(error_msg)
@@ -210,12 +236,18 @@ class Orchestrator:
             run_date=run_date,
             run_start_time=run_date,
             run_end_time=datetime.now(timezone.utc),
-            markets_fetched=len(markets) if 'markets' in locals() else 0,
-            markets_after_filtering=len(filtered_markets) if 'filtered_markets' in locals() else 0,
-            markets_tier1_researched=len(tier1_results) if 'tier1_results' in locals() else 0,
-            markets_tier2_researched=len(tier2_results) if 'tier2_results' in locals() else 0,
+            markets_fetched=len(markets) if "markets" in locals() else 0,
+            markets_after_filtering=(
+                len(filtered_markets) if "filtered_markets" in locals() else 0
+            ),
+            markets_tier1_researched=(
+                len(tier1_results) if "tier1_results" in locals() else 0
+            ),
+            markets_tier2_researched=(
+                len(tier2_results) if "tier2_results" in locals() else 0
+            ),
             opportunities_identified=len(opportunities),
-            total_cost=estimated_cost if 'estimated_cost' in locals() else 0,
+            total_cost=estimated_cost if "estimated_cost" in locals() else 0,
             opportunities=opportunities,
             errors=errors,
             timing={

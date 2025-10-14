@@ -58,9 +58,6 @@ class MarketFetcher:
             "start_date_max": start_date_max,
         }
 
-        # Note: liquidity_num_min and order parameters don't seem to work with the API
-        # We'll do liquidity filtering and ordering in Python
-
         try:
             response = httpx.get(
                 self.markets_endpoint, params=params, timeout=self.timeout
@@ -168,8 +165,6 @@ class MarketFetcher:
             # Extract token IDs - handle both string and list formats
             clob_token_ids_raw = data.get("clobTokenIds", [])
             if isinstance(clob_token_ids_raw, str):
-                # Parse JSON string
-
                 try:
                     clob_token_ids = json.loads(clob_token_ids_raw)
                 except json.JSONDecodeError:
@@ -207,7 +202,7 @@ class MarketFetcher:
                 outcomes=outcomes,
                 outcome_prices=outcome_prices,
                 clob_token_ids=clob_token_ids,
-                category=self._extract_category(data),
+                category=data.get("category"),
                 tags=data.get("tags", []),
                 resolution_source=data.get("resolutionSource"),
                 age_hours=age_hours,
@@ -248,149 +243,4 @@ class MarketFetcher:
 
         except Exception as e:
             logger.debug(f"Failed to parse date '{date_str}': {e}")
-            return None
-
-    def _extract_category(self, data: dict) -> Optional[str]:
-        """
-        Extract category from market data.
-
-        Args:
-            data: Raw market data.
-
-        Returns:
-            Category string or None.
-        """
-        # First try to get category directly from the data
-        category = data.get("tags")
-        if category:
-            return category
-
-        # Try to get category from events
-        events = data.get("events", [])
-        if events and isinstance(events, list) and len(events) > 0:
-            event = events[0]
-            if isinstance(event, dict):
-                event_category = event.get("category")
-                if event_category:
-                    return event_category
-
-        # Try to get category from tags
-        tags = data.get("tags", [])
-        if tags and isinstance(tags, list) and len(tags) > 0:
-            if isinstance(tags[0], dict):
-                return tags[0].get("label")
-            return str(tags[0])
-
-        # Try to infer category from question
-        question = data.get("question", "").lower()
-
-        if any(
-            keyword in question
-            for keyword in [
-                "election",
-                "president",
-                "congress",
-                "senate",
-                "vote",
-                "biden",
-                "trump",
-                "republican",
-                "democrat",
-            ]
-        ):
-            return "Politics"
-        elif any(
-            keyword in question
-            for keyword in [
-                "company",
-                "stock",
-                "ceo",
-                "earnings",
-                "revenue",
-                "fed",
-                "recession",
-                "economy",
-            ]
-        ):
-            return "Business"
-        elif any(
-            keyword in question
-            for keyword in [
-                "technology",
-                "ai",
-                "software",
-                "tech",
-                "openai",
-                "google",
-                "apple",
-            ]
-        ):
-            return "Technology"
-        elif any(
-            keyword in question
-            for keyword in [
-                "regulation",
-                "sec",
-                "fda",
-                "law",
-                "legal",
-                "court",
-                "supreme",
-            ]
-        ):
-            return "Regulatory"
-        elif any(
-            keyword in question
-            for keyword in [
-                "bitcoin",
-                "ethereum",
-                "crypto",
-                "btc",
-                "eth",
-                "tether",
-                "usdt",
-            ]
-        ):
-            return "Crypto"
-        elif any(
-            keyword in question
-            for keyword in [
-                "game",
-                "match",
-                "championship",
-                "tournament",
-                "soccer",
-                "football",
-                "basketball",
-            ]
-        ):
-            return "Sports"
-
-        return None
-
-    def get_market_by_id(self, market_id: str) -> Optional[Market]:
-        """
-        Fetch a specific market by ID.
-
-        Args:
-            market_id: Market ID.
-
-        Returns:
-            Market object or None.
-        """
-        try:
-            params = {"id": market_id}
-            response = httpx.get(
-                self.markets_endpoint, params=params, timeout=self.timeout
-            )
-            response.raise_for_status()
-            data = response.json()
-
-            if not data or len(data) == 0:
-                return None
-
-            return self._parse_market(data[0])
-
-        except Exception as e:
-            logger.error(f"Error fetching market {market_id}: {e}")
             return None

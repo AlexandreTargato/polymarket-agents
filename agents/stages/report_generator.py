@@ -17,7 +17,6 @@ class ReportGenerator:
         opportunities: list[Opportunity],
         run_date: datetime,
         runtime_seconds: float,
-        total_markets_analyzed: int,
         estimated_cost: float,
         errors: list[str] = None,
     ) -> str:
@@ -39,7 +38,9 @@ class ReportGenerator:
 
         # Categorize opportunities
         high_priority = [o for o in opportunities if o.opportunity_score >= 0.10]
-        medium_priority = [o for o in opportunities if 0.05 <= o.opportunity_score < 0.10]
+        medium_priority = [
+            o for o in opportunities if 0.05 <= o.opportunity_score < 0.10
+        ]
 
         # Generate HTML sections
         html = self._html_header()
