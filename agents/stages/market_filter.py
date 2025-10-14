@@ -26,90 +26,30 @@ class MarketFilter:
 
     def filter_markets(self, markets: list[Market]) -> list[Market]:
         """
-        Apply all filters sequentially to narrow down markets.
+        Apply filters that can't be done via API parameters.
 
         Args:
-            markets: List of all markets.
+            markets: List of markets from API (already filtered for active/closed status).
 
         Returns:
             List of filtered markets (15-25 expected).
         """
         logger.info(f"Starting filtering with {len(markets)} markets")
 
-        # Filter 1: Volume & Liquidity
-        markets = self._filter_volume_liquidity(markets)
-        logger.info(f"After volume & liquidity filter: {len(markets)} markets")
-
-        # Filter 2: Time Horizon
-        markets = self._filter_time_horizon(markets)
-        logger.info(f"After time horizon filter: {len(markets)} markets")
-
-        # Filter 3: Category Selection
+        # Filter 1: Category Selection (can't be done via API)
         markets = self._filter_categories(markets)
         logger.info(f"After category filter: {len(markets)} markets")
 
-        # Filter 4: Question Type
+        # Filter 2: Question Type (can't be done via API)
         markets = self._filter_question_type(markets)
         logger.info(f"After question type filter: {len(markets)} markets")
-
-        # Filter 5: Market Maturity
-        markets = self._filter_market_maturity(markets)
-        logger.info(f"After market maturity filter: {len(markets)} markets")
 
         logger.info(f"Filtering complete: {len(markets)} markets remain")
         return markets
 
-    def _filter_volume_liquidity(self, markets: list[Market]) -> list[Market]:
-        """
-        Filter 1: Volume & Liquidity
-
-        Requirements:
-        - Minimum volume: $10,000
-        - Minimum liquidity: $5,000
-        """
-        filtered = [
-            m
-            for m in markets
-            if m.volume >= self.config.min_volume and m.liquidity >= self.config.min_liquidity
-        ]
-
-        logger.debug(
-            f"Volume & Liquidity: {len(filtered)}/{len(markets)} passed "
-            f"(min_volume=${self.config.min_volume}, min_liquidity=${self.config.min_liquidity})"
-        )
-
-        return filtered
-
-    def _filter_time_horizon(self, markets: list[Market]) -> list[Market]:
-        """
-        Filter 2: Time Horizon
-
-        Requirements:
-        - Resolves in 7-30 days
-        - Avoid <7 days (too little time) or >30 days (too much uncertainty)
-        """
-        filtered = []
-        for m in markets:
-            if m.days_until_resolution is None:
-                continue
-
-            if (
-                self.config.min_resolution_days
-                <= m.days_until_resolution
-                <= self.config.max_resolution_days
-            ):
-                filtered.append(m)
-
-        logger.debug(
-            f"Time Horizon: {len(filtered)}/{len(markets)} passed "
-            f"({self.config.min_resolution_days}-{self.config.max_resolution_days} days)"
-        )
-
-        return filtered
-
     def _filter_categories(self, markets: list[Market]) -> list[Market]:
         """
-        Filter 3: Category Selection
+        Filter 1: Category Selection
 
         Focus on: Politics, Business, Technology, Regulatory
         Exclude: Sports, Crypto, Entertainment
@@ -142,7 +82,7 @@ class MarketFilter:
 
     def _filter_question_type(self, markets: list[Market]) -> list[Market]:
         """
-        Filter 4: Question Type
+        Filter 2: Question Type
 
         Prefer:
         - Binary outcomes
@@ -202,32 +142,6 @@ class MarketFilter:
 
         return filtered
 
-    def _filter_market_maturity(self, markets: list[Market]) -> list[Market]:
-        """
-        Filter 5: Market Maturity
-
-        Prefer: Markets open for 24-72 hours
-        Avoid: Brand new (<12 hours) or stale (>2 weeks old)
-
-        Rationale: New markets may not have found equilibrium; old markets likely efficient
-        """
-        filtered = []
-        for m in markets:
-            if m.age_hours is None:
-                # If we don't know age, be conservative and skip
-                # (unless we want to include them by default)
-                continue
-
-            if self.config.min_market_age_hours <= m.age_hours <= self.config.max_market_age_hours:
-                filtered.append(m)
-
-        logger.debug(
-            f"Market Maturity: {len(filtered)}/{len(markets)} passed "
-            f"({self.config.min_market_age_hours}-{self.config.max_market_age_hours} hours)"
-        )
-
-        return filtered
-
     def get_filter_stats(self, original_count: int, filtered_count: int) -> dict:
         """
         Get filtering statistics.
@@ -243,7 +157,9 @@ class MarketFilter:
             "original_count": original_count,
             "filtered_count": filtered_count,
             "filtered_out": original_count - filtered_count,
-            "retention_rate": filtered_count / original_count if original_count > 0 else 0,
+            "retention_rate": (
+                filtered_count / original_count if original_count > 0 else 0
+            ),
             "config": {
                 "min_volume": self.config.min_volume,
                 "min_liquidity": self.config.min_liquidity,

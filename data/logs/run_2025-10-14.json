@@ -1,16 +1,16 @@
 {
-  "run_date": "2025-10-14 17:54:47.220463+00:00",
-  "run_start_time": "2025-10-14 17:54:47.220463+00:00",
-  "run_end_time": "2025-10-14 17:54:48.268562+00:00",
-  "markets_fetched": 0,
-  "markets_after_filtering": 0,
-  "markets_tier1_researched": 0,
+  "run_date": "2025-10-14 18:34:11.251636+00:00",
+  "run_start_time": "2025-10-14 18:34:11.251636+00:00",
+  "run_end_time": "2025-10-14 18:34:25.005483+00:00",
+  "markets_fetched": 83,
+  "markets_after_filtering": 8,
+  "markets_tier1_researched": 8,
   "markets_tier2_researched": 0,
   "opportunities_identified": 0,
-  "total_cost": 0.0,
+  "total_cost": 0.04,
   "opportunities": [],
   "errors": [],
   "timing": {
-    "total_duration": 1.048090934753418
+    "total_duration": 13.753815174102783
   }
 }

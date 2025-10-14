@@ -1,9 +1,11 @@
 """Stage 1: Market Fetching - Retrieve active markets from Polymarket."""
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 import httpx
+import json
+
 
 from agents.config import config
 from agents.models import Market
@@ -21,15 +23,48 @@ class MarketFetcher:
 
     def fetch_all_markets(self) -> list[Market]:
         """
-        Fetch all currently active markets from Polymarket.
+        Fetch filtered markets from Polymarket API using query parameters.
 
         Returns:
             List of Market objects.
         """
-        logger.info("Fetching all markets from Polymarket API...")
+        logger.info("Fetching filtered markets from Polymarket API...")
+
+        start_date_min = (
+            datetime.now(timezone.utc)
+            - timedelta(days=config.filter.max_market_age_days)
+        ).isoformat()
+        start_date_max = (
+            datetime.now(timezone.utc)
+            - timedelta(days=config.filter.min_market_age_days)
+        ).isoformat()
+        min_resolution_date = (
+            datetime.now(timezone.utc)
+            + timedelta(days=config.filter.min_resolution_days)
+        ).isoformat()
+        max_resolution_date = (
+            datetime.now(timezone.utc)
+            + timedelta(days=config.filter.max_resolution_days)
+        ).isoformat()
+
+        params = {
+            "closed": "false",  # Only active markets
+            "end_date_min": min_resolution_date,
+            "end_date_max": max_resolution_date,
+            "limit": 100,  # Get up to 100 markets
+            "liquidity_num_min": config.filter.min_liquidity,
+            "volume_num_min": config.filter.min_volume,  # Filter by volume
+            "start_date_min": start_date_min,
+            "start_date_max": start_date_max,
+        }
+
+        # Note: liquidity_num_min and order parameters don't seem to work with the API
+        # We'll do liquidity filtering and ordering in Python
 
         try:
-            response = httpx.get(self.markets_endpoint, timeout=self.timeout)
+            response = httpx.get(
+                self.markets_endpoint, params=params, timeout=self.timeout
+            )
             response.raise_for_status()
             data = response.json()
 
@@ -40,10 +75,14 @@ class MarketFetcher:
                     if market:
                         markets.append(market)
                 except Exception as e:
-                    logger.warning(f"Failed to parse market {market_data.get('id')}: {e}")
+                    logger.warning(
+                        f"Failed to parse market {market_data.get('id')}: {e}"
+                    )
                     continue
 
-            logger.info(f"Successfully fetched {len(markets)} markets")
+            logger.info(
+                f"Successfully fetched {len(markets)} markets (filtered by API)"
+            )
             return markets
 
         except httpx.HTTPError as e:
@@ -69,9 +108,10 @@ class MarketFetcher:
             question = data.get("question", "")
             description = data.get("description", "")
             active = data.get("active", False)
+            closed = data.get("closed", True)
 
-            # Skip inactive markets
-            if not active:
+            # Skip inactive or closed markets
+            if not active or closed:
                 return None
 
             # Parse dates
@@ -82,26 +122,64 @@ class MarketFetcher:
                 logger.debug(f"Market {market_id} has no end date, skipping")
                 return None
 
-            # Extract metrics
-            volume = float(data.get("volume", 0))
-            liquidity = float(data.get("liquidity", 0))
+            # Extract metrics - use numeric versions if available
+            volume = float(data.get("volumeNum", data.get("volume", 0)))
+            liquidity = float(data.get("liquidityNum", data.get("liquidity", 0)))
 
-            # Extract outcomes
-            outcomes = data.get("outcomes", [])
+            # Extract outcomes - handle both string and list formats
+            outcomes_raw = data.get("outcomes", [])
+            if isinstance(outcomes_raw, str):
+                try:
+                    outcomes = json.loads(outcomes_raw)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        f"Market {market_id} has invalid outcomes JSON, skipping"
+                    )
+                    return None
+            else:
+                outcomes = outcomes_raw
+
             if not outcomes or not isinstance(outcomes, list):
                 logger.debug(f"Market {market_id} has invalid outcomes, skipping")
                 return None
 
-            outcome_prices = data.get("outcomePrices", [])
+            # Extract outcome prices - handle both string and list formats
+            outcome_prices_raw = data.get("outcomePrices", [])
+            if isinstance(outcome_prices_raw, str):
+                try:
+                    outcome_prices = json.loads(outcome_prices_raw)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        f"Market {market_id} has invalid outcome prices JSON, skipping"
+                    )
+                    return None
+            else:
+                outcome_prices = outcome_prices_raw
+
             if not outcome_prices or len(outcome_prices) != len(outcomes):
-                logger.debug(f"Market {market_id} has mismatched outcome prices, skipping")
+                logger.debug(
+                    f"Market {market_id} has mismatched outcome prices, skipping"
+                )
                 return None
 
             # Convert outcome prices to floats
             outcome_prices = [float(price) for price in outcome_prices]
 
-            # Extract token IDs
-            clob_token_ids = data.get("clobTokenIds", [])
+            # Extract token IDs - handle both string and list formats
+            clob_token_ids_raw = data.get("clobTokenIds", [])
+            if isinstance(clob_token_ids_raw, str):
+                # Parse JSON string
+
+                try:
+                    clob_token_ids = json.loads(clob_token_ids_raw)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        f"Market {market_id} has invalid token IDs JSON, skipping"
+                    )
+                    return None
+            else:
+                clob_token_ids = clob_token_ids_raw
+
             if not clob_token_ids:
                 logger.debug(f"Market {market_id} has no token IDs, skipping")
                 return None
@@ -182,6 +260,20 @@ class MarketFetcher:
         Returns:
             Category string or None.
         """
+        # First try to get category directly from the data
+        category = data.get("tags")
+        if category:
+            return category
+
+        # Try to get category from events
+        events = data.get("events", [])
+        if events and isinstance(events, list) and len(events) > 0:
+            event = events[0]
+            if isinstance(event, dict):
+                event_category = event.get("category")
+                if event_category:
+                    return event_category
+
         # Try to get category from tags
         tags = data.get("tags", [])
         if tags and isinstance(tags, list) and len(tags) > 0:
@@ -192,17 +284,86 @@ class MarketFetcher:
         # Try to infer category from question
         question = data.get("question", "").lower()
 
-        if any(keyword in question for keyword in ["election", "president", "congress", "senate", "vote"]):
+        if any(
+            keyword in question
+            for keyword in [
+                "election",
+                "president",
+                "congress",
+                "senate",
+                "vote",
+                "biden",
+                "trump",
+                "republican",
+                "democrat",
+            ]
+        ):
             return "Politics"
-        elif any(keyword in question for keyword in ["company", "stock", "ceo", "earnings", "revenue"]):
+        elif any(
+            keyword in question
+            for keyword in [
+                "company",
+                "stock",
+                "ceo",
+                "earnings",
+                "revenue",
+                "fed",
+                "recession",
+                "economy",
+            ]
+        ):
             return "Business"
-        elif any(keyword in question for keyword in ["technology", "ai", "software", "tech"]):
+        elif any(
+            keyword in question
+            for keyword in [
+                "technology",
+                "ai",
+                "software",
+                "tech",
+                "openai",
+                "google",
+                "apple",
+            ]
+        ):
             return "Technology"
-        elif any(keyword in question for keyword in ["regulation", "sec", "fda", "law"]):
+        elif any(
+            keyword in question
+            for keyword in [
+                "regulation",
+                "sec",
+                "fda",
+                "law",
+                "legal",
+                "court",
+                "supreme",
+            ]
+        ):
             return "Regulatory"
-        elif any(keyword in question for keyword in ["bitcoin", "ethereum", "crypto", "btc", "eth"]):
+        elif any(
+            keyword in question
+            for keyword in [
+                "bitcoin",
+                "ethereum",
+                "crypto",
+                "btc",
+                "eth",
+                "tether",
+                "usdt",
+            ]
+        ):
             return "Crypto"
-        elif any(keyword in question for keyword in ["game", "match", "championship", "tournament"]):
+        elif any(
+            keyword in question
+            for keyword in [
+                "game",
+                "match",
+                "championship",
+                "tournament",
+                "soccer",
+                "football",
+                "basketball",
+            ]
+        ):
             return "Sports"
 
         return None
@@ -219,7 +380,9 @@ class MarketFetcher:
         """
         try:
             params = {"id": market_id}
-            response = httpx.get(self.markets_endpoint, params=params, timeout=self.timeout)
+            response = httpx.get(
+                self.markets_endpoint, params=params, timeout=self.timeout
+            )
             response.raise_for_status()
             data = response.json()
 
