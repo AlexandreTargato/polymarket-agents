@@ -1,0 +1,15 @@
+meta {
+  name: getMarkets
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://gamma-api.polymarket.com/markets/slug/fed-decision-in-october
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: false
+}

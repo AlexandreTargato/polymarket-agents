@@ -15,6 +15,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
+from datetime import datetime
 
 from agents.config import config
 from agents.scheduler import DailyScheduler
@@ -28,17 +29,17 @@ def setup_logging():
 
     # Create formatters
     detailed_formatter = logging.Formatter(
-        fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+        fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    simple_formatter = logging.Formatter(
-        fmt='%(levelname)s: %(message)s'
-    )
+    simple_formatter = logging.Formatter(fmt="%(levelname)s: %(message)s")
 
     # File handler (detailed logs)
-    from datetime import datetime
-    log_file = log_dir / f"{config.logging.log_file_prefix}_{datetime.now().strftime('%Y%m%d')}.log"
+    log_file = (
+        log_dir
+        / f"{config.logging.log_file_prefix}_{datetime.now().strftime('%Y%m%d')}.log"
+    )
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(detailed_formatter)
@@ -55,9 +56,9 @@ def setup_logging():
     root_logger.addHandler(console_handler)
 
     # Reduce noise from third-party libraries
-    logging.getLogger('httpx').setLevel(logging.WARNING)
-    logging.getLogger('httpcore').setLevel(logging.WARNING)
-    logging.getLogger('anthropic').setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("anthropic").setLevel(logging.WARNING)
 
     return root_logger
 
@@ -74,12 +75,14 @@ def validate_config():
         errors.append("TAVILY_API_KEY not set")
 
     # Check email config (only for scheduled runs)
-    if not all([
-        config.api.email_smtp_username,
-        config.api.email_smtp_password,
-        config.api.email_from,
-        config.api.email_to,
-    ]):
+    if not all(
+        [
+            config.api.email_smtp_username,
+            config.api.email_smtp_password,
+            config.api.email_from,
+            config.api.email_to,
+        ]
+    ):
         logging.warning(
             "Email configuration incomplete. Email reports will not be sent. "
             "Set EMAIL_SMTP_USERNAME, EMAIL_SMTP_PASSWORD, EMAIL_FROM, and EMAIL_TO environment variables."
@@ -98,17 +101,17 @@ def main():
     """Main entry point."""
     # Parse arguments
     parser = argparse.ArgumentParser(
-        description='Polymarket Trading Agent - Automated market research and opportunity identification'
+        description="Polymarket Trading Agent - Automated market research and opportunity identification"
     )
     parser.add_argument(
-        '--schedule',
-        action='store_true',
-        help='Run on daily schedule (default: run once and exit)'
+        "--schedule",
+        action="store_true",
+        help="Run on daily schedule (default: run once and exit)",
     )
     parser.add_argument(
-        '--test',
-        action='store_true',
-        help='Test mode (limit to 5 markets for faster testing)'
+        "--test",
+        action="store_true",
+        help="Test mode (limit to 5 markets for faster testing)",
     )
 
     args = parser.parse_args()
@@ -160,7 +163,9 @@ def main():
                 print("\nTop Opportunities:")
                 for i, opp in enumerate(result.opportunities[:5], 1):
                     print(f"\n{i}. {opp.question[:70]}...")
-                    print(f"   Edge: {opp.edge:.1%} | Score: {opp.opportunity_score:.4f}")
+                    print(
+                        f"   Edge: {opp.edge:.1%} | Score: {opp.opportunity_score:.4f}"
+                    )
                     print(f"   {opp.recommended_action} {opp.recommended_outcome}")
 
             if result.errors:
