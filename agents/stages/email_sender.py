@@ -61,20 +61,23 @@ class EmailSender:
             subject = f"Polymarket Research Report - {date_str}"
 
         try:
-            # Create message
+            # Create message with proper MIME structure
             message = MIMEMultipart("alternative")
             message["From"] = self.config.from_email
             message["To"] = recipient
             message["Subject"] = subject
+            message["MIME-Version"] = "1.0"
 
-            # Attach HTML content
-            html_part = MIMEText(html_content, "html")
-            message.attach(html_part)
-
-            # Create plain text fallback
+            # Create plain text fallback first (lower priority)
             plain_text = self._html_to_plain_text(html_content)
-            text_part = MIMEText(plain_text, "plain")
+            text_part = MIMEText(plain_text, "plain", "utf-8")
+            text_part.add_header("Content-Type", "text/plain; charset=utf-8")
             message.attach(text_part)
+
+            # Attach HTML content second (higher priority)
+            html_part = MIMEText(html_content, "html", "utf-8")
+            html_part.add_header("Content-Type", "text/html; charset=utf-8")
+            message.attach(html_part)
 
             # Connect to SMTP server and send
             logger.info(
@@ -116,18 +119,27 @@ class EmailSender:
 
         # Replace common HTML tags with text equivalents
         text = re.sub(r"<br\s*/?>", "\n", text)
-        text = re.sub(r"<h[1-6][^>]*>(.*?)</h[1-6]>", r"\n\n\1\n", text)
+        text = re.sub(r"<h1[^>]*>(.*?)</h1>", r"\n\n=== \1 ===\n", text)
+        text = re.sub(r"<h2[^>]*>(.*?)</h2>", r"\n\n--- \1 ---\n", text)
+        text = re.sub(r"<h3[^>]*>(.*?)</h3>", r"\n\n\1:\n", text)
         text = re.sub(r"<p[^>]*>(.*?)</p>", r"\1\n", text)
         text = re.sub(r"<li[^>]*>(.*?)</li>", r"• \1\n", text)
+        text = re.sub(r"<strong[^>]*>(.*?)</strong>", r"**\1**", text)
+        text = re.sub(r"<em[^>]*>(.*?)</em>", r"_\1_", text)
 
         # Remove all other HTML tags
         text = re.sub(r"<[^>]+>", "", text)
 
-        # Clean up whitespace
-        text = re.sub(r"\n\s*\n", "\n\n", text)
+        # Clean up whitespace and add some structure
+        text = re.sub(r"\n\s*\n\s*\n", "\n\n", text)
+        text = re.sub(r"^\s+", "", text, flags=re.MULTILINE)
         text = text.strip()
 
-        return text
+        # Add header for plain text version
+        plain_text_header = "POLYMARKET RESEARCH REPORT (Plain Text Version)\n"
+        plain_text_header += "=" * 50 + "\n\n"
+
+        return plain_text_header + text
 
 
 class DataLogger:

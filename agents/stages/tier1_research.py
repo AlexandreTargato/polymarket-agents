@@ -50,8 +50,6 @@ class Tier1Researcher:
         queries = self._form_search_queries(market)
         logger.debug(f"Generated queries: {queries}")
 
-        print(queries)
-
         # Step 2: Run searches
         sources = self._run_searches(queries)
         logger.debug(f"Found {len(sources)} sources")
@@ -152,7 +150,7 @@ Generate 2-3 search queries that would help research this question."""
 
         for query in queries:
             try:
-                # Use Tavily for web search (supports time filtering)
+                # Use Tavily for web search
                 search_result = self.tavily_client.search(
                     query=query,
                     max_results=5,
@@ -168,7 +166,7 @@ Generate 2-3 search queries that would help research this question."""
                     source = Source(
                         url=url,
                         title=result.get("title", ""),
-                        credibility=self._estimate_source_credibility(url),
+                        credibility=self._estimate_source_credibility(),
                         date=None,  # Tavily doesn't always provide dates
                         snippet=result.get("content", "")[:500],
                         relevance_score=result.get("score"),
@@ -188,9 +186,10 @@ Generate 2-3 search queries that would help research this question."""
         # Limit to max sources
         return all_sources[: self.config.tier1_max_sources]
 
-    def _estimate_source_credibility(self, url: str) -> int:
+    def _estimate_source_credibility(self) -> int:
         """
         Estimate source credibility (1-5) based on URL.
+        Todo: implement a clever way to estimate source credibility based on the url and content.
 
         Args:
             url: Source URL.
@@ -198,62 +197,8 @@ Generate 2-3 search queries that would help research this question."""
         Returns:
             Credibility score 1-5.
         """
-        url_lower = url.lower()
 
-        # High credibility sources (5)
-        high_credibility = [
-            "reuters.com",
-            "apnews.com",
-            "bbc.com",
-            "wsj.com",
-            "ft.com",
-            "bloomberg.com",
-            "nytimes.com",
-            "washingtonpost.com",
-            "economist.com",
-            "nature.com",
-            "science.org",
-            ".gov",
-            ".edu",
-        ]
-
-        # Good credibility (4)
-        good_credibility = [
-            "cnbc.com",
-            "cnn.com",
-            "forbes.com",
-            "politico.com",
-            "thehill.com",
-            "axios.com",
-            "theverge.com",
-            "techcrunch.com",
-            "arstechnica.com",
-        ]
-
-        # Medium credibility (3)
-        medium_credibility = [
-            "yahoo.com",
-            "msn.com",
-            "businessinsider.com",
-            "marketwatch.com",
-            "coindesk.com",
-            "cointelegraph.com",
-        ]
-
-        for domain in high_credibility:
-            if domain in url_lower:
-                return 5
-
-        for domain in good_credibility:
-            if domain in url_lower:
-                return 4
-
-        for domain in medium_credibility:
-            if domain in url_lower:
-                return 3
-
-        # Default to 2 for unknown sources
-        return 2
+        return 5
 
     def _analyze_context(self, market: Market, sources: list[Source]) -> dict:
         """

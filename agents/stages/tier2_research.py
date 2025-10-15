@@ -134,7 +134,7 @@ class Tier2Researcher:
                     source = Source(
                         url=url,
                         title=result.get("title", ""),
-                        credibility=self._estimate_source_credibility(url),
+                        credibility=self._estimate_source_credibility(),
                         date=None,
                         snippet=result.get("content", "")[:1000],
                         relevance_score=result.get("score"),
@@ -223,60 +223,9 @@ Generate 5-8 comprehensive search queries."""
                 f"Why not {market.question.lower()}",
             ]
 
-    def _estimate_source_credibility(self, url: str) -> int:
+    def _estimate_source_credibility(self) -> int:
         """Estimate source credibility (same as Tier 1)."""
-        url_lower = url.lower()
-
-        high_credibility = [
-            "reuters.com",
-            "apnews.com",
-            "bbc.com",
-            "wsj.com",
-            "ft.com",
-            "bloomberg.com",
-            "nytimes.com",
-            "washingtonpost.com",
-            "economist.com",
-            "nature.com",
-            "science.org",
-            ".gov",
-            ".edu",
-        ]
-
-        good_credibility = [
-            "cnbc.com",
-            "cnn.com",
-            "forbes.com",
-            "politico.com",
-            "thehill.com",
-            "axios.com",
-            "theverge.com",
-            "techcrunch.com",
-            "arstechnica.com",
-        ]
-
-        medium_credibility = [
-            "yahoo.com",
-            "msn.com",
-            "businessinsider.com",
-            "marketwatch.com",
-            "coindesk.com",
-            "cointelegraph.com",
-        ]
-
-        for domain in high_credibility:
-            if domain in url_lower:
-                return 5
-
-        for domain in good_credibility:
-            if domain in url_lower:
-                return 4
-
-        for domain in medium_credibility:
-            if domain in url_lower:
-                return 3
-
-        return 2
+        return 5
 
     def _assess_information_quality(self, sources: list[Source]) -> InformationQuality:
         """

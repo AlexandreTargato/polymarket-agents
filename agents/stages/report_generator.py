@@ -26,7 +26,6 @@ class ReportGenerator:
             opportunities: List of identified opportunities.
             run_date: Date of the analysis run.
             runtime_seconds: Total runtime in seconds.
-            total_markets_analyzed: Total markets analyzed.
             estimated_cost: Estimated API cost.
             errors: List of errors encountered.
 
@@ -61,119 +60,189 @@ class ReportGenerator:
         return html
 
     def _html_header(self) -> str:
-        """Generate HTML header with styles."""
-        return """
-<!DOCTYPE html>
-<html>
+        """Generate HTML header with email-compatible styles."""
+        return """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polymarket Trading Opportunities</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style type="text/css">
+        /* Reset styles */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+        
+        /* Main styles */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0 !important;
+            padding: 0 !important;
             background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
         }
-        .container {
-            background-color: white;
-            border-radius: 8px;
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        .content {
             padding: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
         h1 {
             color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 20px 0;
             border-bottom: 3px solid #3498db;
             padding-bottom: 10px;
         }
+        
         h2 {
             color: #34495e;
-            margin-top: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
             border-bottom: 2px solid #ecf0f1;
             padding-bottom: 8px;
         }
+        
         h3 {
             color: #7f8c8d;
-            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
         }
+        
         .summary-box {
             background-color: #ecf0f1;
             border-left: 4px solid #3498db;
             padding: 15px;
             margin: 20px 0;
         }
+        
         .opportunity {
             background-color: #f8f9fa;
             border-left: 4px solid #27ae60;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 4px;
         }
+        
         .opportunity.medium {
             border-left-color: #f39c12;
         }
+        
         .metric {
             display: inline-block;
             background-color: #3498db;
-            color: white;
+            color: #ffffff;
             padding: 5px 10px;
-            border-radius: 4px;
             margin: 5px 5px 5px 0;
-            font-size: 0.9em;
+            font-size: 12px;
+            font-weight: bold;
         }
+        
         .metric.edge {
             background-color: #27ae60;
         }
+        
         .metric.score {
             background-color: #e74c3c;
         }
+        
         .metric.confidence {
             background-color: #9b59b6;
         }
+        
         .flag {
             display: inline-block;
             padding: 3px 8px;
-            border-radius: 3px;
             margin: 3px;
-            font-size: 0.85em;
+            font-size: 11px;
         }
+        
         .flag.green {
             background-color: #d4edda;
             color: #155724;
         }
+        
         .flag.red {
             background-color: #f8d7da;
             color: #721c24;
         }
+        
         .link-button {
             display: inline-block;
             background-color: #3498db;
-            color: white;
+            color: #ffffff;
             padding: 10px 20px;
             text-decoration: none;
-            border-radius: 4px;
             margin-top: 10px;
+            font-weight: bold;
         }
-        .link-button:hover {
-            background-color: #2980b9;
-        }
+        
         ul {
             line-height: 1.8;
+            margin: 10px 0;
+            padding-left: 20px;
         }
+        
         .footer {
             margin-top: 40px;
             padding-top: 20px;
             border-top: 2px solid #ecf0f1;
-            font-size: 0.9em;
+            font-size: 12px;
             color: #7f8c8d;
+        }
+        
+        .error-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        /* Mobile responsive */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            .content {
+                padding: 20px !important;
+            }
+            h1 {
+                font-size: 20px !important;
+            }
+            h2 {
+                font-size: 18px !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="email-container">
+        <div class="content">
 """
 
     def _html_executive_summary(
@@ -281,7 +350,7 @@ class ReportGenerator:
         """Generate errors section if any."""
         html = """
         <h2>System Notices</h2>
-        <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+        <div class="error-box">
             <ul>
 """
         for error in errors[:10]:  # Limit to 10 errors
@@ -300,6 +369,7 @@ class ReportGenerator:
             <p>Generated with Claude Code on {run_date.strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
             <p>Total runtime: {runtime_seconds/60:.1f} minutes</p>
             <p><em>This is an automated research report. Always conduct your own due diligence before trading.</em></p>
+        </div>
         </div>
     </div>
 </body>

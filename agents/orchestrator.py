@@ -196,7 +196,6 @@ class Orchestrator:
                 opportunities=opportunities,
                 run_date=run_date,
                 runtime_seconds=total_duration,
-                total_markets_analyzed=len(filtered_markets),
                 estimated_cost=estimated_cost,
                 errors=errors,
             )
@@ -208,7 +207,7 @@ class Orchestrator:
             stage_start = time.time()
             logger.info("\n[STAGE 7] Sending email report...")
 
-            subject = f"Polymarket Research Report - {run_date.strftime('%Y-%m-%d')} - {len(opportunities)} Opportunities"
+            subject = f"Polymarket Research Report - {len(opportunities)} Opportunities"
 
             email_sent = self.email_sender.send_report(
                 html_content=html_report,
