@@ -6,6 +6,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from typing import Optional
+import json
+from pathlib import Path
+import re
 
 from agents.config import config
 
@@ -36,11 +39,13 @@ class EmailSender:
             True if sent successfully, False otherwise.
         """
         # Validate configuration
-        if not all([
-            self.config.smtp_username,
-            self.config.smtp_password,
-            self.config.from_email,
-        ]):
+        if not all(
+            [
+                self.config.smtp_username,
+                self.config.smtp_password,
+                self.config.from_email,
+            ]
+        ):
             logger.error("Email configuration incomplete. Check SMTP settings.")
             return False
 
@@ -52,27 +57,32 @@ class EmailSender:
 
         # Generate subject if not provided
         if not subject:
-            date_str = datetime.now().strftime('%Y-%m-%d')
+            date_str = datetime.now().strftime("%Y-%m-%d")
             subject = f"Polymarket Research Report - {date_str}"
 
         try:
-            # Create message
-            message = MIMEMultipart('alternative')
-            message['From'] = self.config.from_email
-            message['To'] = recipient
-            message['Subject'] = subject
+            # Create message with proper MIME structure
+            message = MIMEMultipart("alternative")
+            message["From"] = self.config.from_email
+            message["To"] = recipient
+            message["Subject"] = subject
+            message["MIME-Version"] = "1.0"
 
-            # Attach HTML content
-            html_part = MIMEText(html_content, 'html')
-            message.attach(html_part)
-
-            # Create plain text fallback
+            # Create plain text fallback first (lower priority)
             plain_text = self._html_to_plain_text(html_content)
-            text_part = MIMEText(plain_text, 'plain')
+            text_part = MIMEText(plain_text, "plain", "utf-8")
+            text_part.add_header("Content-Type", "text/plain; charset=utf-8")
             message.attach(text_part)
 
+            # Attach HTML content second (higher priority)
+            html_part = MIMEText(html_content, "html", "utf-8")
+            html_part.add_header("Content-Type", "text/html; charset=utf-8")
+            message.attach(html_part)
+
             # Connect to SMTP server and send
-            logger.info(f"Connecting to SMTP server {self.config.smtp_host}:{self.config.smtp_port}")
+            logger.info(
+                f"Connecting to SMTP server {self.config.smtp_host}:{self.config.smtp_port}"
+            )
 
             with smtplib.SMTP(self.config.smtp_host, self.config.smtp_port) as server:
                 server.starttls()  # Upgrade to secure connection
@@ -102,27 +112,34 @@ class EmailSender:
         Returns:
             Plain text version.
         """
-        # Very simple HTML stripping - could be improved with html2text library
-        import re
 
         # Remove style and script tags
-        text = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL)
-        text = re.sub(r'<script[^>]*>.*?</script>', '', text, flags=re.DOTALL)
+        text = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL)
+        text = re.sub(r"<script[^>]*>.*?</script>", "", text, flags=re.DOTALL)
 
         # Replace common HTML tags with text equivalents
-        text = re.sub(r'<br\s*/?>', '\n', text)
-        text = re.sub(r'<h[1-6][^>]*>(.*?)</h[1-6]>', r'\n\n\1\n', text)
-        text = re.sub(r'<p[^>]*>(.*?)</p>', r'\1\n', text)
-        text = re.sub(r'<li[^>]*>(.*?)</li>', r'• \1\n', text)
+        text = re.sub(r"<br\s*/?>", "\n", text)
+        text = re.sub(r"<h1[^>]*>(.*?)</h1>", r"\n\n=== \1 ===\n", text)
+        text = re.sub(r"<h2[^>]*>(.*?)</h2>", r"\n\n--- \1 ---\n", text)
+        text = re.sub(r"<h3[^>]*>(.*?)</h3>", r"\n\n\1:\n", text)
+        text = re.sub(r"<p[^>]*>(.*?)</p>", r"\1\n", text)
+        text = re.sub(r"<li[^>]*>(.*?)</li>", r"• \1\n", text)
+        text = re.sub(r"<strong[^>]*>(.*?)</strong>", r"**\1**", text)
+        text = re.sub(r"<em[^>]*>(.*?)</em>", r"_\1_", text)
 
         # Remove all other HTML tags
-        text = re.sub(r'<[^>]+>', '', text)
+        text = re.sub(r"<[^>]+>", "", text)
 
-        # Clean up whitespace
-        text = re.sub(r'\n\s*\n', '\n\n', text)
+        # Clean up whitespace and add some structure
+        text = re.sub(r"\n\s*\n\s*\n", "\n\n", text)
+        text = re.sub(r"^\s+", "", text, flags=re.MULTILINE)
         text = text.strip()
 
-        return text
+        # Add header for plain text version
+        plain_text_header = "POLYMARKET RESEARCH REPORT (Plain Text Version)\n"
+        plain_text_header += "=" * 50 + "\n\n"
+
+        return plain_text_header + text
 
 
 class DataLogger:
@@ -142,25 +159,22 @@ class DataLogger:
         Returns:
             True if logged successfully.
         """
-        import json
-        import os
-        from pathlib import Path
 
         try:
             # Create log directory if needed
             Path(self.log_dir).mkdir(parents=True, exist_ok=True)
 
             # Generate filename with date
-            date_str = run_data.get('run_date', datetime.now().isoformat())
+            date_str = run_data.get("run_date", datetime.now().isoformat())
             if isinstance(date_str, datetime):
-                date_str = date_str.strftime('%Y-%m-%d')
+                date_str = date_str.strftime("%Y-%m-%d")
             else:
                 date_str = date_str[:10]  # Take just date part
 
             filename = f"{self.log_dir}/run_{date_str}.json"
 
             # Write JSON file
-            with open(filename, 'w') as f:
+            with open(filename, "w") as f:
                 json.dump(run_data, f, indent=2, default=str)
 
             logger.info(f"Daily run data logged to {filename}")
@@ -169,45 +183,3 @@ class DataLogger:
         except Exception as e:
             logger.error(f"Failed to log daily run data: {e}")
             return False
-
-    def get_historical_runs(self, days: int = 30) -> list[dict]:
-        """
-        Retrieve historical run data.
-
-        Args:
-            days: Number of days to retrieve.
-
-        Returns:
-            List of run data dictionaries.
-        """
-        import json
-        import os
-        from pathlib import Path
-        from datetime import timedelta
-
-        runs = []
-
-        try:
-            log_path = Path(self.log_dir)
-            if not log_path.exists():
-                return runs
-
-            # Get all JSON files in log directory
-            for file_path in sorted(log_path.glob("run_*.json"), reverse=True):
-                try:
-                    with open(file_path, 'r') as f:
-                        run_data = json.load(f)
-                        runs.append(run_data)
-
-                    if len(runs) >= days:
-                        break
-
-                except Exception as e:
-                    logger.warning(f"Failed to read {file_path}: {e}")
-                    continue
-
-            return runs
-
-        except Exception as e:
-            logger.error(f"Failed to retrieve historical runs: {e}")
-            return runs

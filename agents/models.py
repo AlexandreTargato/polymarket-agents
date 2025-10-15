@@ -6,22 +6,6 @@ from pydantic import BaseModel, Field
 from enum import Enum
 
 
-class MarketStatus(str, Enum):
-    """Market status enum."""
-
-    ACTIVE = "active"
-    CLOSED = "closed"
-    RESOLVED = "resolved"
-
-
-class ResearchTier(str, Enum):
-    """Research tier enum."""
-
-    TIER1 = "tier1"
-    TIER2 = "tier2"
-    SKIPPED = "skipped"
-
-
 class ConfidenceLevel(str, Enum):
     """Confidence level enum."""
 
@@ -222,47 +206,3 @@ class DailyRun(BaseModel):
 
     # Timing breakdown
     timing: dict[str, float] = Field(default_factory=dict)
-
-
-class MarketOutcome(BaseModel):
-    """Market outcome tracking."""
-
-    market_id: str
-    question: str
-
-    # Original analysis
-    analysis_date: datetime
-    model_estimate: float
-    market_price_at_analysis: float
-    edge: float
-    opportunity_score: float
-    recommended_action: str
-
-    # Actual outcome
-    actual_outcome: Optional[str] = None
-    actual_resolution_date: Optional[datetime] = None
-    model_was_correct: Optional[bool] = None
-
-    # Scoring
-    brier_score: Optional[float] = None
-
-
-class EmailReport(BaseModel):
-    """Email report model."""
-
-    report_date: datetime
-
-    # Summary
-    total_markets_analyzed: int
-    opportunities_count: int
-    highest_opportunity_score: float
-    estimated_cost: float
-
-    # Opportunities by priority
-    high_priority: list[Opportunity] = Field(default_factory=list)
-    medium_priority: list[Opportunity] = Field(default_factory=list)
-    monitored_markets: list[str] = Field(default_factory=list)
-
-    # System metrics
-    runtime_seconds: float
-    errors: list[str] = Field(default_factory=list)

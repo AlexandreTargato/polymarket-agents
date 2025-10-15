@@ -1,0 +1,399 @@
+{
+  "run_date": "2025-10-15 21:23:12.049990+00:00",
+  "run_start_time": "2025-10-15 21:23:12.049990+00:00",
+  "run_end_time": "2025-10-15 21:25:54.513752+00:00",
+  "markets_fetched": 51,
+  "markets_after_filtering": 10,
+  "markets_tier1_researched": 10,
+  "markets_tier2_researched": 3,
+  "opportunities_identified": 2,
+  "total_cost": 0.19,
+  "opportunities": [
+    {
+      "market_id": "631492",
+      "question": "100% tariff on China in effect by November 1?",
+      "market": {
+        "id": "631492",
+        "question": "100% tariff on China in effect by November 1?",
+        "description": "On October 10, President Trump announced that the United States would apply a 100% tariff to all imports from China starting November 1 (see: https://truthsocial.com/@realDonaldTrump/posts/115351840469973590).\n\nThis market will resolve to \u201cYes\u201d if a general 100% tariff rate or higher on imports into the United States from China goes into effect for any amount of time by November 1, 2025, 11:59\u202fPM ET. Otherwise, this market will resolve to \u201cNo\u201d.\n\nFor the purpose of this market, \"goes into effect\" means the start date of the tariffs (as set by legislation or executive action) must have passed without being further delayed or suspended. Only tariffs which are in effect will qualify. Tariffs which are paused, or which have been announced but not yet gone into effect will not be considered.\n\nThe general tariff rate refers to the base tariff rate paid on imports, including any general tariff the U.S. imposes on all imports (e.g. a 10% tariff on all U.S. imports and a 50% tariff on top of that on Chinese imports would equal a 60% tariff). Item specific exceptions or increases will not be considered (i.e. this market does not refer to the effective tariff rate).\n\nA general tariff that includes item specific exceptions will still qualify, as long as a policy of a general 100% tariff on all imports into the United States from China is in effect.\n\nThis market's primary resolution source will be official information from the Trump administration; however, a consensus of credible information will also be used.",
+        "end_date": "2025-11-01 00:00:00+00:00",
+        "start_date": "2025-10-11 01:54:51.592128+00:00",
+        "volume": 316462.260754,
+        "liquidity": 19368.571,
+        "active": true,
+        "outcomes": [
+          "Yes",
+          "No"
+        ],
+        "outcome_prices": [
+          0.16,
+          0.84
+        ],
+        "clob_token_ids": [
+          "16961629207099931605519553279291608035383403981184594007441669755435199992372",
+          "19545808353588654336669327965068990655761532485285980791887061572305935013493"
+        ],
+        "category": null,
+        "tags": [],
+        "resolution_source": "",
+        "age_hours": 115.47238969194444,
+        "days_until_resolution": 16.108886631724538
+      },
+      "tier2_research": {
+        "market_id": "631492",
+        "question": "100% tariff on China in effect by November 1?",
+        "research_timestamp": "2025-10-15 21:25:36.809781+00:00",
+        "model_estimate": {
+          "yes_probability": 0.25,
+          "confidence_interval_low": 0.15,
+          "confidence_interval_high": 0.35,
+          "confidence_level": "medium"
+        },
+        "key_findings": [
+          {
+            "finding": "Trump threatens trade 'retribution' against Beijing over soybeans: \u201cDon\u2019t worry about China, it will all be fine! Highly respected President Xi just had a bad moment. He doesn\u2019t want Depression for his country, and neither do I. The U.S.A. wants to help China, not hu...",
+            "sources": [
+              {
+                "url": "https://finance.yahoo.com/news/live/trump-tariffs-live-updates-china-hits-back-at-trump-with-sanctions-on-us-shipping-units-bessent-slams-china-162418195.html",
+                "title": "Trump threatens trade 'retribution' against Beijing over soybeans",
+                "credibility": 5,
+                "date": null,
+                "snippet": "\u201cDon\u2019t worry about China, it will all be fine! Highly respected President Xi just had a bad moment. He doesn\u2019t want Depression for his country, and neither do I. The U.S.A. wants to help China, not hurt it!!!\u201d he wrote on Truth Social.\n\nUS-China tensions ratcheted up in earnest last week, when Trump said the US would impose an additional 100% tariff on Chinese goods starting on Nov. 1 over Beijing's plan to impose new exort controls on rare earth minerals. [...] The announcement comes the same day President Trump wrote in a Truth Social post that the Chinese government is seeking to tighten its control over rare earth minerals. Trump went on to threaten a \u201cmassive increase\u201d in tariffs on Chinese goods.\n\n_Read more here_.     \n       Fri, October 10, 2025 at 5:20 PM UTC Grace O'Donnell    Stocks fall after Trump threatens 'massive increase' of tariffs on Chinese goods [...] \"Based on the fact that China has taken this unprecedented position, and speaking only for the U.S.A., and not oth",
+                "relevance_score": 0.6307082
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Tariffs in the second Trump administration - Wikipedia: On October 10, President Trump announced an additional 100% tariff on Chinese goods, starting November 1, in retaliation of China's broadening of export controls on rare earths.( China controls roughl...",
+            "sources": [
+              {
+                "url": "https://en.wikipedia.org/wiki/Tariffs_in_the_second_Trump_administration",
+                "title": "Tariffs in the second Trump administration - Wikipedia",
+                "credibility": 5,
+                "date": null,
+                "snippet": "On October 10, President Trump announced an additional 100% tariff on Chinese goods, starting November 1, in retaliation of China's broadening of export controls on rare earths.( China controls roughly 70% of the global supply of rare earth minerals. Trump also said the US would impose export controls on \"any and all critical software\".( [...] ### 2024 presidential campaign\n\n[edit]\n\nIn his 2024 presidential campaign, Trump pledged even larger tariffs than those in his first term, including 60% on China, 100% on Mexico, and 20% on all other countries. He also proposed tariffs to penalize US companies that outsourced manufacturing, such as a 200% tariff on John Deere. [...] During his second term as President of the United States, Donald Trump enacted a series of steep tariffs affecting nearly all goods imported into the country.( From January to April 2025, the average applied US tariff rate rose from 2.5% to an estimated 27%\u2014the highest level in over a century.( After changes and negot",
+                "relevance_score": 0.6097339
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Trump 2.0 tariff tracker - Trade Compliance Resource Hub: | Pharmaceuticals, pharmaceutical ingredients, and derivative products Sec. 232 Invest. | Threatened to start Oct. 1 (Feb. 18, 2025; threatened rate announced July 8, 2025) | 100% | Announced on Truth...",
+            "sources": [
+              {
+                "url": "https://www.tradecomplianceresourcehub.com/2025/10/10/trump-2-0-tariff-tracker/",
+                "title": "Trump 2.0 tariff tracker - Trade Compliance Resource Hub",
+                "credibility": 5,
+                "date": null,
+                "snippet": "| Pharmaceuticals, pharmaceutical ingredients, and derivative products Sec. 232 Invest. | Threatened to start Oct. 1 (Feb. 18, 2025; threatened rate announced July 8, 2025) | 100% | Announced on Truth Social (Sept. 25, 2025):all branded or patented pharmaceutical products | Exemption announced on Truth Social (Sept. 25, 2025): products produced by companies building a manufacturing facility in the United States, including facilities where a company has broken ground Details \u25be On April 1, [...] | \ud83d\udd14 Additional (rare earth export control countermeasure): Threatened to start Nov. 1 (Oct. 10, 2025) | 100% | These tariffs will be in addition to any other tariffs on Chinese-origin goods that are already in effect. |  |\n| Secondary (Russian oil): Threatened (Sept. 13, 2025) | 50\u2013100% | Details \u25be On September 13, President Trump posted a letter to all NATO countries on Truth Social suggesting that the alliance place a 50\u2013100% tariff on China until the war in Ukraine ends. |  | [...] \u25be China\u2019s c",
+                "relevance_score": 0.585789
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Trump threatens new China tariffs over rare earth limits: \u201cOne of the Policies that we are calculating at this moment is a massive increase of Tariffs on Chinese products coming into the United States of America,\u201d Trump posted on his Truth Social platform. \u201c...",
+            "sources": [
+              {
+                "url": "https://virginiabusiness.com/trump-china-tariffs-rare-earths-trade/",
+                "title": "Trump threatens new China tariffs over rare earth limits",
+                "credibility": 5,
+                "date": null,
+                "snippet": "\u201cOne of the Policies that we are calculating at this moment is a massive increase of Tariffs on Chinese products coming into the United States of America,\u201d Trump posted on his Truth Social platform. \u201cThere are many other countermeasures that are, likewise, under serious consideration.\u201d [...] The U.S. president said the move on rare earths was \u201cespecially inappropriate\u201d given the announcement of a ceasefire between Israel and Hamas in Gaza so that the remaining hostages from Hamas\u2019 Oct. 7, 2023, attack can be released. He raised the possibility without evidence that China was trying to steal the moment from him for his role in the ceasefire, saying on social media, \u201cI wonder if that timing was coincidental?\u201d",
+                "relevance_score": 0.52700067
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Trump seeks tech export limits, new Chinese imports tariffs - AP News: # Trump threatens tech export limits, new 100% tariff on Chinese imports starting Nov. 1 or sooner\n\n## Trump threatens tech export limits, new 100% tariff on Chinese imports starting Nov. 1 or sooner\n...",
+            "sources": [
+              {
+                "url": "https://apnews.com/article/trump-xi-china-cc47e258cfc6336dfddcc20fa67a3642",
+                "title": "Trump seeks tech export limits, new Chinese imports tariffs - AP News",
+                "credibility": 5,
+                "date": null,
+                "snippet": "# Trump threatens tech export limits, new 100% tariff on Chinese imports starting Nov. 1 or sooner\n\n## Trump threatens tech export limits, new 100% tariff on Chinese imports starting Nov. 1 or sooner\n\n1 of 3 |  \n\nPresident Donald Trump told reporters he did not formally cancel the meeting with Chinese President Xi, following a trade dispute between the two nations and announcements of escalating tariff rates.\n\n2 of 3 | [...] Updated [hour]:[minute] [AMPM] [timezone], [monthFull] [day], [year]\n\nLeer en espa\u00f1ol\n\n \n\nShare\n\n Facebook\n Copy\n\n  Link copied\n Print)\n Email\n X\n LinkedIn\n Bluesky\n Flipboard\n Pinterest\n Reddit\n\nWASHINGTON (AP) \u2014 President Donald Trump on Friday threatened to place an additional 100% tax on Chinese imports starting on Nov. 1 or sooner, potentially escalating tariff rates close to levels that in April fanned fears of a global recession. [...] Trump said in a post that \u201cstarting November 1st, 2025 (or sooner, depending on any further actions or changes taken by Chin",
+                "relevance_score": 0.51193684
+              }
+            ],
+            "importance": 5
+          }
+        ],
+        "reasoning": "Let me analyze this prediction market question following the framework:\n\n1. CURRENT STATE\n- Trump announced 100% tariffs on Chinese imports to begin November 1, 2025\n- This is in response to China's new export controls on rare earth minerals\n- Current market prices show 16% Yes, 84% No\n- The announcement was made on October 10, 2025, giving about 3 weeks until implementation\n- The tariffs would be general (applying to all Chinese imports) rather than sector-specific\n\n2. HISTORICAL CONTEXT\n- During Trump's first term, he implemented significant but lower tariffs on China\n- His 2024 campaign promised 60% tariffs on China\n- The current US average tariff rate is 27% (highest in a century)\n- Previous tariff announcements by Trump have sometimes been modified or delayed before implementation\n\n3. KEY VARIABLES\n- China's response and potential negotiations in the next 3 weeks\n- Domestic business/political pressure against such dramatic tariffs\n- Legal challenges or congressional opposition\n- Economic impact concerns\n- Implementation logistics and technical feasibility\n- Relationship to other events (Israel-Hamas ceasefire, rare earth disputes)\n\n4. PROBABILITY ESTIMATION\nI estimate a 25% probability of implementation by November 1 (higher than market):\n- Trump has authority to implement tariffs\n- He has historical precedent of following through on tariff threats\n- The short timeline reduces negotiation window\n- The rare earth dispute provides concrete motivation\nHowever:\n- The extreme magnitude (100%) makes implementation more difficult\n- Strong likely opposition from business community\n- Potential economic disruption concerns\n\n5. CONTRARIAN ANALYSIS\nMarket might be underpricing because:\n- Trump has historically followed through on tariff threats\n- The specific date and rate suggest concrete plans\n- Current geopolitical tensions support escalation\nMarket might be right because:\n- 100% rate is unprecedented and potentially devastating\n- Previous tariff announcements often modified before implementation\n- Business community likely to strongly oppose\n\n6. RISKS TO THESIS\n- Legal challenges could delay implementation\n- China could make concessions leading to postponement\n- Internal administration opposition\n- Congressional intervention\n- Implementation logistics might require longer timeline\n- Economic impact concerns could force modification\n- Global economic conditions might make implementation too risky\n\nGiven this analysis, while I believe the market is somewhat underpricing the probability, the extreme nature of the proposed tariffs and implementation challenges justify significant skepticism about implementation by the specific date.",
+        "base_rate": null,
+        "recent_developments": "",
+        "risks_to_thesis": [],
+        "sources": [
+          {
+            "url": "https://finance.yahoo.com/news/live/trump-tariffs-live-updates-china-hits-back-at-trump-with-sanctions-on-us-shipping-units-bessent-slams-china-162418195.html",
+            "title": "Trump threatens trade 'retribution' against Beijing over soybeans",
+            "credibility": 5,
+            "date": null,
+            "snippet": "\u201cDon\u2019t worry about China, it will all be fine! Highly respected President Xi just had a bad moment. He doesn\u2019t want Depression for his country, and neither do I. The U.S.A. wants to help China, not hurt it!!!\u201d he wrote on Truth Social.\n\nUS-China tensions ratcheted up in earnest last week, when Trump said the US would impose an additional 100% tariff on Chinese goods starting on Nov. 1 over Beijing's plan to impose new exort controls on rare earth minerals. [...] The announcement comes the same day President Trump wrote in a Truth Social post that the Chinese government is seeking to tighten its control over rare earth minerals. Trump went on to threaten a \u201cmassive increase\u201d in tariffs on Chinese goods.\n\n_Read more here_.     \n       Fri, October 10, 2025 at 5:20 PM UTC Grace O'Donnell    Stocks fall after Trump threatens 'massive increase' of tariffs on Chinese goods [...] \"Based on the fact that China has taken this unprecedented position, and speaking only for the U.S.A., and not oth",
+            "relevance_score": 0.6307082
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Tariffs_in_the_second_Trump_administration",
+            "title": "Tariffs in the second Trump administration - Wikipedia",
+            "credibility": 5,
+            "date": null,
+            "snippet": "On October 10, President Trump announced an additional 100% tariff on Chinese goods, starting November 1, in retaliation of China's broadening of export controls on rare earths.( China controls roughly 70% of the global supply of rare earth minerals. Trump also said the US would impose export controls on \"any and all critical software\".( [...] ### 2024 presidential campaign\n\n[edit]\n\nIn his 2024 presidential campaign, Trump pledged even larger tariffs than those in his first term, including 60% on China, 100% on Mexico, and 20% on all other countries. He also proposed tariffs to penalize US companies that outsourced manufacturing, such as a 200% tariff on John Deere. [...] During his second term as President of the United States, Donald Trump enacted a series of steep tariffs affecting nearly all goods imported into the country.( From January to April 2025, the average applied US tariff rate rose from 2.5% to an estimated 27%\u2014the highest level in over a century.( After changes and negot",
+            "relevance_score": 0.6097339
+          },
+          {
+            "url": "https://www.tradecomplianceresourcehub.com/2025/10/10/trump-2-0-tariff-tracker/",
+            "title": "Trump 2.0 tariff tracker - Trade Compliance Resource Hub",
+            "credibility": 5,
+            "date": null,
+            "snippet": "| Pharmaceuticals, pharmaceutical ingredients, and derivative products Sec. 232 Invest. | Threatened to start Oct. 1 (Feb. 18, 2025; threatened rate announced July 8, 2025) | 100% | Announced on Truth Social (Sept. 25, 2025):all branded or patented pharmaceutical products | Exemption announced on Truth Social (Sept. 25, 2025): products produced by companies building a manufacturing facility in the United States, including facilities where a company has broken ground Details \u25be On April 1, [...] | \ud83d\udd14 Additional (rare earth export control countermeasure): Threatened to start Nov. 1 (Oct. 10, 2025) | 100% | These tariffs will be in addition to any other tariffs on Chinese-origin goods that are already in effect. |  |\n| Secondary (Russian oil): Threatened (Sept. 13, 2025) | 50\u2013100% | Details \u25be On September 13, President Trump posted a letter to all NATO countries on Truth Social suggesting that the alliance place a 50\u2013100% tariff on China until the war in Ukraine ends. |  | [...] \u25be China\u2019s c",
+            "relevance_score": 0.585789
+          },
+          {
+            "url": "https://virginiabusiness.com/trump-china-tariffs-rare-earths-trade/",
+            "title": "Trump threatens new China tariffs over rare earth limits",
+            "credibility": 5,
+            "date": null,
+            "snippet": "\u201cOne of the Policies that we are calculating at this moment is a massive increase of Tariffs on Chinese products coming into the United States of America,\u201d Trump posted on his Truth Social platform. \u201cThere are many other countermeasures that are, likewise, under serious consideration.\u201d [...] The U.S. president said the move on rare earths was \u201cespecially inappropriate\u201d given the announcement of a ceasefire between Israel and Hamas in Gaza so that the remaining hostages from Hamas\u2019 Oct. 7, 2023, attack can be released. He raised the possibility without evidence that China was trying to steal the moment from him for his role in the ceasefire, saying on social media, \u201cI wonder if that timing was coincidental?\u201d",
+            "relevance_score": 0.52700067
+          },
+          {
+            "url": "https://apnews.com/article/trump-xi-china-cc47e258cfc6336dfddcc20fa67a3642",
+            "title": "Trump seeks tech export limits, new Chinese imports tariffs - AP News",
+            "credibility": 5,
+            "date": null,
+            "snippet": "# Trump threatens tech export limits, new 100% tariff on Chinese imports starting Nov. 1 or sooner\n\n## Trump threatens tech export limits, new 100% tariff on Chinese imports starting Nov. 1 or sooner\n\n1 of 3 |  \n\nPresident Donald Trump told reporters he did not formally cancel the meeting with Chinese President Xi, following a trade dispute between the two nations and announcements of escalating tariff rates.\n\n2 of 3 | [...] Updated [hour]:[minute] [AMPM] [timezone], [monthFull] [day], [year]\n\nLeer en espa\u00f1ol\n\n \n\nShare\n\n Facebook\n Copy\n\n  Link copied\n Print)\n Email\n X\n LinkedIn\n Bluesky\n Flipboard\n Pinterest\n Reddit\n\nWASHINGTON (AP) \u2014 President Donald Trump on Friday threatened to place an additional 100% tax on Chinese imports starting on Nov. 1 or sooner, potentially escalating tariff rates close to levels that in April fanned fears of a global recession. [...] Trump said in a post that \u201cstarting November 1st, 2025 (or sooner, depending on any further actions or changes taken by Chin",
+            "relevance_score": 0.51193684
+          }
+        ],
+        "information_quality": "high",
+        "research_duration_seconds": 19.747646808624268
+      },
+      "model_probability": 0.25,
+      "market_probability": 0.16,
+      "edge": 0.09,
+      "confidence_score": {
+        "source_quality": 1.0,
+        "information_recency": 1.0,
+        "consensus_level": 1.0,
+        "base_rate_alignment": 0.6,
+        "reasoning_clarity": 1.0,
+        "overall_score": 0.92
+      },
+      "liquidity_factor": 1.0,
+      "opportunity_score": 0.0828,
+      "recommended_action": "Moderate BUY",
+      "recommended_outcome": "YES",
+      "red_flags": [
+        "Low model confidence (medium)",
+        "High volume market ($316,462)"
+      ],
+      "green_flags": [
+        "5 high-quality sources",
+        "Good source diversity (5 sources)",
+        "High-quality information available",
+        "Good liquidity ($19,369)",
+        "5 key findings"
+      ],
+      "polymarket_url": "https://polymarket.com/market/631492"
+    },
+    {
+      "market_id": "632295",
+      "question": "Giants vs. Broncos",
+      "market": {
+        "id": "632295",
+        "question": "Giants vs. Broncos",
+        "description": "In the upcoming NFL game, scheduled for October 19 at 4:05PM ET:\nIf the New York Giants win, the market will resolve to \u201cGiants\u201d.\nIf the Denver Broncos win, the market will resolve to \u201cBroncos\u201d.\nIf the game is postponed, this market will remain open until the game has been completed.\nIf the game is canceled entirely, with no make-up game, this market will resolve 50-50.",
+        "end_date": "2025-10-26 20:05:00+00:00",
+        "start_date": "2025-10-12 05:01:30.019644+00:00",
+        "volume": 236631.291384,
+        "liquidity": 249108.1054,
+        "active": true,
+        "outcomes": [
+          "Giants",
+          "Broncos"
+        ],
+        "outcome_prices": [
+          0.245,
+          0.755
+        ],
+        "clob_token_ids": [
+          "97705377830870121325042421765092411334303033544660617753066888851263016231755",
+          "30922392254197651119910884085020460543299077274913525114978081507966193284367"
+        ],
+        "category": null,
+        "tags": [],
+        "resolution_source": "https://www.nfl.com/",
+        "age_hours": 88.36171544388888,
+        "days_until_resolution": 10.945692184699073
+      },
+      "tier2_research": {
+        "market_id": "632295",
+        "question": "Giants vs. Broncos",
+        "research_timestamp": "2025-10-15 21:25:53.644566+00:00",
+        "model_estimate": {
+          "yes_probability": 0.3,
+          "confidence_interval_low": 0.25,
+          "confidence_interval_high": 0.35,
+          "confidence_level": "low"
+        },
+        "key_findings": [
+          {
+            "finding": "Broncos Vs Giants Game Log - StatMuse: | AFC East | W | L | T | PCT |\n ---  --- \n|  | 4 | 1 | 0 | .800 |\n|  | 3 | 2 | 0 | .600 |\n| AFC North | W | L | T | PCT |\n|  | 3 | 1 | 0 |  |\n|  | 2 | 3 | 0 | .400 |\n| AFC South | W | L | T | PCT |\n| ...",
+            "sources": [
+              {
+                "url": "https://www.statmuse.com/nfl/ask/broncos-vs-giants-game-log",
+                "title": "Broncos Vs Giants Game Log - StatMuse",
+                "credibility": 5,
+                "date": null,
+                "snippet": "| AFC East | W | L | T | PCT |\n ---  --- \n|  | 4 | 1 | 0 | .800 |\n|  | 3 | 2 | 0 | .600 |\n| AFC North | W | L | T | PCT |\n|  | 3 | 1 | 0 |  |\n|  | 2 | 3 | 0 | .400 |\n| AFC South | W | L | T | PCT |\n|  | 4 | 1 | 0 | .800 |\n|  | 4 | 1 | 0 | .800 |\n| AFC West | W | L | T | PCT |\n| Broncos | 4 | 2 | 0 | .667 |\n| Chargers | 3 | 2 | 0 | .600 |\n\n## NFL 2025 Scores & Schedule\n\n### Scores [...] Sun 12 Oct 2025\n\n## NFL 2025 Leaders\n\nPass Yards Leaders  ### 1,503\n\nStafford\n\n### 1,356\n\nPrescott\n\n### 1,290\n\nJones\n\nRush Yards Leaders  ### 480\n\nTaylor\n\n### 450\n\nCook\n\n### 447\n\nWilliams\n\nRec Yards Leaders  ### 588\n\nNacua\n\n### 534\n\nSmith-Njigba\n\n### 449\n\nJefferson\n\nPass TD Leaders  ### 12\n\nGoff\n\n### 11\n\nStafford\n\n### 10\n\nTagovailoa\n\nRush TD Leaders  ### 6\n\nTaylor\n\n### 5\n\nCook\n\n### 5\n\nWilliams\n\nRec TD Leaders  ### 6\n\nSt. Brown\n\n### 5\n\nEgbuka\n\n### 5\n\nOdunze\n\nQB Rating Leaders  ### 130.5 [...] Jackson\n\n### 120.7\n\nGoff\n\n### 114.8\n\nDarnold\n\nSack Leaders  ### 8.0\n\nBonitto\n\n### 7.0\n\nBurns\n\n### 5.5\n\nYoung\n\n## N",
+                "relevance_score": 0.8497846
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Giants @ Broncos stats, picks, lineups, injuries - NFL Pickwatch: #### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT\n\nEmpower Field at Mile High\n\n10/19/2025 16:05 ET\n\n...",
+            "sources": [
+              {
+                "url": "https://nflpickwatch.com/nfl/game/3124-giants-at-broncos-2025-10-19",
+                "title": "Giants @ Broncos stats, picks, lineups, injuries - NFL Pickwatch",
+                "credibility": 5,
+                "date": null,
+                "snippet": "#### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT\n\nEmpower Field at Mile High\n\n10/19/2025 16:05 ET\n\n###### -7.5\n\n###### -7.5\n\n#### Denver Broncos\n\n#### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n##### Select Game [...] Expert Consensus\n Best Experts & Fans\n Standings\n Schedules\n Head to Head Stats\n Game Odds\n Best Player Props\n Lineups\n Depth Charts\n Injuries\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT\n\nEmpower Field at Mile High\n\n10/19/2025 16:05 ET\n\n###### -7.5\n\n###### -7.5\n\n#### Denver Broncos\n\n#### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT [...] Expert Consensus  Best Experts & Fans  Standings  Schedules  Head to Head Stats  Game Odds  Best Player Props  Lineups  Depth Charts  Injuries \n\n Expert Consensus\n Best Experts & Fan",
+                "relevance_score": 0.8286204
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Giants vs. Broncos (Oct 19, 2025) Live Score - ESPN: # New York Giants @ Denver Broncos\n\nNew York GiantsGiantsNYG\n\n2-4, 0-3 Away\n\nDenver BroncosBroncosDEN\n\n4-2, 2-0 Home\n\n## Matchup Predictor\n\n32.1\n\n%\n\nNYG\n\n67.6\n\n%\n\nDEN\n\nAccording to ESPN Analytics\n\n## ...",
+            "sources": [
+              {
+                "url": "https://www.espn.com/nfl/game/_/gameId/401772757/giants-broncos",
+                "title": "Giants vs. Broncos (Oct 19, 2025) Live Score - ESPN",
+                "credibility": 5,
+                "date": null,
+                "snippet": "# New York Giants @ Denver Broncos\n\nNew York GiantsGiantsNYG\n\n2-4, 0-3 Away\n\nDenver BroncosBroncosDEN\n\n4-2, 2-0 Home\n\n## Matchup Predictor\n\n32.1\n\n%\n\nNYG\n\n67.6\n\n%\n\nDEN\n\nAccording to ESPN Analytics\n\n## Game Information\n\nDenver, CO\n\n60\u00b0\n\nCBS\n\nGame Odds\n\n2025-10-19T20:05ZOpenSpreadTotalML\n\nNew York GiantsGiantsNYG\n\n(2-4)\n\n(2-4, 0-3 Away)\n\no42.5\n\n-110\n\n+7.5\n\n-110o40.5\n\n-110+320\n\nDenver BroncosBroncosDEN\n\n(4-2)\n\n(4-2, 2-0 Home)\n\n-7.5\n\n-110\n\n-7.5\n\n-110u40.5\n\n-110-425\n\n## Season Leaders\n\nGiantsBroncos [...] | DATE | OPP | RESULT |\n --- \n| 10/9/25 | vsPHI | W34-17 |\n| 10/5/25 | @NO | L26-14 |\n| 9/28/25 | vsLAC | W21-18 |\n| 9/21/25 | vsKC | L22-9 |\n| 9/14/25 | @DAL | L40-37 OT |\n\nBroncos\n\n| DATE | OPP | RESULT |\n --- \n| 10/12/25 | vsNYJ | W13-11 |\n| 10/5/25 | @PHI | W21-17 |\n| 9/29/25 | vsCIN | W28-3 |\n| 9/21/25 | @LAC | L23-20 |\n| 9/14/25 | @IND | L29-28 |\n\nData is currently unavailable.\n\n## FIND TICKETS\n\nBroncos vs GiantsEmpower Field at Mile High - Sun 10/19/25, 4:05Tickets as low as $230 [..",
+                "relevance_score": 0.7769112
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "2025 Week 7 NFL Games: Giants Broncos Head to Head -: General Info \n  + Overview\n  + Travel Analysis\n  + Injury Report\n Picks & Odds \n  + Point Spread Analysis\n  + Over/Under Analysis\n  + Money Line Analysis\n  + Similar Games Analysis\n  + Point Spread Li...",
+            "sources": [
+              {
+                "url": "https://www.teamrankings.com/nfl/matchup/giants-broncos-week-7-2025/head-to-head",
+                "title": "2025 Week 7 NFL Games: Giants Broncos Head to Head -",
+                "credibility": 5,
+                "date": null,
+                "snippet": "General Info \n  + Overview\n  + Travel Analysis\n  + Injury Report\n Picks & Odds \n  + Point Spread Analysis\n  + Over/Under Analysis\n  + Money Line Analysis\n  + Similar Games Analysis\n  + Point Spread Line Movement\n  + Over/Under Line Movement\n  + Money Line Movement\n Ratings & Stats \n  + Power Ratings\n  + Matchup Stats\n  + Efficiency Stats\n  + Stat Splits\n  + Rosters & Stats\n Records & Results \n  + Situational Trends\n  + Dual Game Log\n  + Head to Head\n  + Common Opponents [...] + Baltimore Ravens\n  + Buffalo Bills\n  + Carolina Panthers\n  + Chicago Bears\n  + Cincinnati Bengals\n  + Cleveland Browns\n  + Dallas Cowboys\n  + Denver Broncos\n  + Detroit Lions\n  + Green Bay Packers\n  + Houston Texans\n  + Indianapolis Colts\n  + Jacksonville Jaguars\n  + Kansas City Chiefs\n  + Miami Dolphins\n  + Las Vegas Raiders\n  + Los Angeles Chargers\n  + Los Angeles Rams\n  + Minnesota Vikings\n  + New England Patriots\n  + New Orleans Saints\n  + New York Giants\n  + New York Jets [...] Tampa Bay @ Detroit, Mon 7:00",
+                "relevance_score": 0.5637388
+              }
+            ],
+            "importance": 5
+          },
+          {
+            "finding": "Denver Broncos vs. New York Giants - Stathead.com: Welcome  \u00b7 Your Account\n Logout\n Stathead Login\n Create Account\n\n# Denver Broncos vs. New York Giants: Head-to-Head Reg Season and Playoffs Stats Comparison\n\nCompare players and teams or see head to h...",
+            "sources": [
+              {
+                "url": "https://stathead.com/football/vs/denver-broncos-vs-new-york-giants",
+                "title": "Denver Broncos vs. New York Giants - Stathead.com",
+                "credibility": 5,
+                "date": null,
+                "snippet": "Welcome  \u00b7 Your Account\n Logout\n Stathead Login\n Create Account\n\n# Denver Broncos vs. New York Giants: Head-to-Head Reg Season and Playoffs Stats Comparison\n\nCompare players and teams or see head to head results between teams, players, or player vs. team. Data Coverage\n\nTHIS QUESTION WAS ANSWERED USING\n\nPOWERED BY\n\nYour All Access Pass to the  Pro Football Database Go beyond the basics. Become a Stathead\n\nStart Your FREE Trial\n\nShow Criteria Hide Criteria\n\n\u27a6Share Results [...] If you utilize material unique to a Sports Reference site for a tweet, an article, or for research for a broadcast or podcast, please strongly consider citing this site as the source for the material. It would be greatly appreciated and would help us continue to produce this material.\n\n Welcome  \u00b7 Your Account\n Logout\n Stathead Login\n Create Account\n\nYou are here: Football Stathead  > Versus Finder | Player and Team Comparison and Head-to-Head Stats  > Query Results\n\n## Full Site Menu [...] All Tools\n\n   Stathead",
+                "relevance_score": 0.34913373
+              }
+            ],
+            "importance": 5
+          }
+        ],
+        "reasoning": "Let me analyze this NFL matchup systematically:\n\n1. CURRENT STATE\n- Game scheduled for October 19, 2025, 4:05 PM ET at Empower Field (Denver)\n- Broncos are 4-2 (2-0 at home)\n- Giants are 2-4 (0-3 on road)\n- Broncos are 7.5 point favorites\n- Weather forecast: 60\u00b0F\n- Current market prices: Broncos 75.5%, Giants 24.5%\n\n2. HISTORICAL CONTEXT\n- ESPN Analytics gives Broncos 67.6% win probability\n- Vegas implied probability (from -425 ML) is ~81% for Broncos\n- Home teams historically win ~57% of NFL games\n- 7.5 point favorites historically win ~75% of games\n\n3. KEY VARIABLES\n- Home field advantage (especially Denver's altitude)\n- Team momentum (Broncos won last 3, Giants struggling)\n- Broncos' strong home record (2-0)\n- Giants' poor road record (0-3)\n- Point spread indicates significant talent gap\n\n4. PROBABILITY ESTIMATION\nI estimate Broncos have a 70% chance to win based on:\n- Home field advantage\n- Better record and recent form\n- Giants' road struggles\n- But slightly lower than market pricing suggests\n\n5. CONTRARIAN ANALYSIS\n- Market may be overvaluing Broncos' recent wins\n- Giants could be due for positive regression\n- 75.5% seems slightly high for any NFL team\n- Injuries could emerge before game date\n\n6. RISKS TO THESIS\n- Long forecast window (game in 2025)\n- Rosters/coaches could change significantly\n- Injuries could impact either team\n- Weather conditions could change\n\nCONCLUSION:\nThe current market price of 75.5% for Broncos appears slightly high. While Denver should be favored, a more reasonable probability is around 70%. The Giants at current prices (24.5%) offer marginal value, though this is a low-confidence assessment given the long time horizon.",
+        "base_rate": null,
+        "recent_developments": "",
+        "risks_to_thesis": [
+          "- Rosters/coaches could change significantly\n- Injuries could impact either team\n- Weather conditions could change\n\nCONCLUSION:\nThe current market price of",
+          "5% for Broncos appears slightly high. While Denver should be favored, a more reasonable probability is around 70%. The Giants at current prices (",
+          "5%) offer marginal value, though this is a low-confidence assessment given the long time horizon."
+        ],
+        "sources": [
+          {
+            "url": "https://www.statmuse.com/nfl/ask/broncos-vs-giants-game-log",
+            "title": "Broncos Vs Giants Game Log - StatMuse",
+            "credibility": 5,
+            "date": null,
+            "snippet": "| AFC East | W | L | T | PCT |\n ---  --- \n|  | 4 | 1 | 0 | .800 |\n|  | 3 | 2 | 0 | .600 |\n| AFC North | W | L | T | PCT |\n|  | 3 | 1 | 0 |  |\n|  | 2 | 3 | 0 | .400 |\n| AFC South | W | L | T | PCT |\n|  | 4 | 1 | 0 | .800 |\n|  | 4 | 1 | 0 | .800 |\n| AFC West | W | L | T | PCT |\n| Broncos | 4 | 2 | 0 | .667 |\n| Chargers | 3 | 2 | 0 | .600 |\n\n## NFL 2025 Scores & Schedule\n\n### Scores [...] Sun 12 Oct 2025\n\n## NFL 2025 Leaders\n\nPass Yards Leaders  ### 1,503\n\nStafford\n\n### 1,356\n\nPrescott\n\n### 1,290\n\nJones\n\nRush Yards Leaders  ### 480\n\nTaylor\n\n### 450\n\nCook\n\n### 447\n\nWilliams\n\nRec Yards Leaders  ### 588\n\nNacua\n\n### 534\n\nSmith-Njigba\n\n### 449\n\nJefferson\n\nPass TD Leaders  ### 12\n\nGoff\n\n### 11\n\nStafford\n\n### 10\n\nTagovailoa\n\nRush TD Leaders  ### 6\n\nTaylor\n\n### 5\n\nCook\n\n### 5\n\nWilliams\n\nRec TD Leaders  ### 6\n\nSt. Brown\n\n### 5\n\nEgbuka\n\n### 5\n\nOdunze\n\nQB Rating Leaders  ### 130.5 [...] Jackson\n\n### 120.7\n\nGoff\n\n### 114.8\n\nDarnold\n\nSack Leaders  ### 8.0\n\nBonitto\n\n### 7.0\n\nBurns\n\n### 5.5\n\nYoung\n\n## N",
+            "relevance_score": 0.8497846
+          },
+          {
+            "url": "https://nflpickwatch.com/nfl/game/3124-giants-at-broncos-2025-10-19",
+            "title": "Giants @ Broncos stats, picks, lineups, injuries - NFL Pickwatch",
+            "credibility": 5,
+            "date": null,
+            "snippet": "#### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT\n\nEmpower Field at Mile High\n\n10/19/2025 16:05 ET\n\n###### -7.5\n\n###### -7.5\n\n#### Denver Broncos\n\n#### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n##### Select Game [...] Expert Consensus\n Best Experts & Fans\n Standings\n Schedules\n Head to Head Stats\n Game Odds\n Best Player Props\n Lineups\n Depth Charts\n Injuries\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT\n\nEmpower Field at Mile High\n\n10/19/2025 16:05 ET\n\n###### -7.5\n\n###### -7.5\n\n#### Denver Broncos\n\n#### Denver\n\n#### Broncos\n\n#### 4-2\n\n###### 4-2\n\n#### New York Giants\n\n#### New York\n\n#### Giants\n\n#### 2-4\n\n###### 2-4\n\n###### +7.5\n\n###### +7.5\n\nAT [...] Expert Consensus  Best Experts & Fans  Standings  Schedules  Head to Head Stats  Game Odds  Best Player Props  Lineups  Depth Charts  Injuries \n\n Expert Consensus\n Best Experts & Fan",
+            "relevance_score": 0.8286204
+          },
+          {
+            "url": "https://www.espn.com/nfl/game/_/gameId/401772757/giants-broncos",
+            "title": "Giants vs. Broncos (Oct 19, 2025) Live Score - ESPN",
+            "credibility": 5,
+            "date": null,
+            "snippet": "# New York Giants @ Denver Broncos\n\nNew York GiantsGiantsNYG\n\n2-4, 0-3 Away\n\nDenver BroncosBroncosDEN\n\n4-2, 2-0 Home\n\n## Matchup Predictor\n\n32.1\n\n%\n\nNYG\n\n67.6\n\n%\n\nDEN\n\nAccording to ESPN Analytics\n\n## Game Information\n\nDenver, CO\n\n60\u00b0\n\nCBS\n\nGame Odds\n\n2025-10-19T20:05ZOpenSpreadTotalML\n\nNew York GiantsGiantsNYG\n\n(2-4)\n\n(2-4, 0-3 Away)\n\no42.5\n\n-110\n\n+7.5\n\n-110o40.5\n\n-110+320\n\nDenver BroncosBroncosDEN\n\n(4-2)\n\n(4-2, 2-0 Home)\n\n-7.5\n\n-110\n\n-7.5\n\n-110u40.5\n\n-110-425\n\n## Season Leaders\n\nGiantsBroncos [...] | DATE | OPP | RESULT |\n --- \n| 10/9/25 | vsPHI | W34-17 |\n| 10/5/25 | @NO | L26-14 |\n| 9/28/25 | vsLAC | W21-18 |\n| 9/21/25 | vsKC | L22-9 |\n| 9/14/25 | @DAL | L40-37 OT |\n\nBroncos\n\n| DATE | OPP | RESULT |\n --- \n| 10/12/25 | vsNYJ | W13-11 |\n| 10/5/25 | @PHI | W21-17 |\n| 9/29/25 | vsCIN | W28-3 |\n| 9/21/25 | @LAC | L23-20 |\n| 9/14/25 | @IND | L29-28 |\n\nData is currently unavailable.\n\n## FIND TICKETS\n\nBroncos vs GiantsEmpower Field at Mile High - Sun 10/19/25, 4:05Tickets as low as $230 [..",
+            "relevance_score": 0.7769112
+          },
+          {
+            "url": "https://www.teamrankings.com/nfl/matchup/giants-broncos-week-7-2025/head-to-head",
+            "title": "2025 Week 7 NFL Games: Giants Broncos Head to Head -",
+            "credibility": 5,
+            "date": null,
+            "snippet": "General Info \n  + Overview\n  + Travel Analysis\n  + Injury Report\n Picks & Odds \n  + Point Spread Analysis\n  + Over/Under Analysis\n  + Money Line Analysis\n  + Similar Games Analysis\n  + Point Spread Line Movement\n  + Over/Under Line Movement\n  + Money Line Movement\n Ratings & Stats \n  + Power Ratings\n  + Matchup Stats\n  + Efficiency Stats\n  + Stat Splits\n  + Rosters & Stats\n Records & Results \n  + Situational Trends\n  + Dual Game Log\n  + Head to Head\n  + Common Opponents [...] + Baltimore Ravens\n  + Buffalo Bills\n  + Carolina Panthers\n  + Chicago Bears\n  + Cincinnati Bengals\n  + Cleveland Browns\n  + Dallas Cowboys\n  + Denver Broncos\n  + Detroit Lions\n  + Green Bay Packers\n  + Houston Texans\n  + Indianapolis Colts\n  + Jacksonville Jaguars\n  + Kansas City Chiefs\n  + Miami Dolphins\n  + Las Vegas Raiders\n  + Los Angeles Chargers\n  + Los Angeles Rams\n  + Minnesota Vikings\n  + New England Patriots\n  + New Orleans Saints\n  + New York Giants\n  + New York Jets [...] Tampa Bay @ Detroit, Mon 7:00",
+            "relevance_score": 0.5637388
+          },
+          {
+            "url": "https://stathead.com/football/vs/denver-broncos-vs-new-york-giants",
+            "title": "Denver Broncos vs. New York Giants - Stathead.com",
+            "credibility": 5,
+            "date": null,
+            "snippet": "Welcome  \u00b7 Your Account\n Logout\n Stathead Login\n Create Account\n\n# Denver Broncos vs. New York Giants: Head-to-Head Reg Season and Playoffs Stats Comparison\n\nCompare players and teams or see head to head results between teams, players, or player vs. team. Data Coverage\n\nTHIS QUESTION WAS ANSWERED USING\n\nPOWERED BY\n\nYour All Access Pass to the  Pro Football Database Go beyond the basics. Become a Stathead\n\nStart Your FREE Trial\n\nShow Criteria Hide Criteria\n\n\u27a6Share Results [...] If you utilize material unique to a Sports Reference site for a tweet, an article, or for research for a broadcast or podcast, please strongly consider citing this site as the source for the material. It would be greatly appreciated and would help us continue to produce this material.\n\n Welcome  \u00b7 Your Account\n Logout\n Stathead Login\n Create Account\n\nYou are here: Football Stathead  > Versus Finder | Player and Team Comparison and Head-to-Head Stats  > Query Results\n\n## Full Site Menu [...] All Tools\n\n   Stathead",
+            "relevance_score": 0.34913373
+          }
+        ],
+        "information_quality": "high",
+        "research_duration_seconds": 16.832625150680542
+      },
+      "model_probability": 0.3,
+      "market_probability": 0.245,
+      "edge": 0.05499999999999999,
+      "confidence_score": {
+        "source_quality": 1.0,
+        "information_recency": 1.0,
+        "consensus_level": 1.0,
+        "base_rate_alignment": 0.4,
+        "reasoning_clarity": 1.0,
+        "overall_score": 0.88
+      },
+      "liquidity_factor": 1.0,
+      "opportunity_score": 0.04839999999999999,
+      "recommended_action": "Moderate BUY",
+      "recommended_outcome": "YES",
+      "red_flags": [
+        "Low model confidence (low)",
+        "High volume market ($236,631)"
+      ],
+      "green_flags": [
+        "5 high-quality sources",
+        "Good source diversity (5 sources)",
+        "High-quality information available",
+        "Good liquidity ($249,108)",
+        "5 key findings"
+      ],
+      "polymarket_url": "https://polymarket.com/market/632295"
+    }
+  ],
+  "errors": [],
+  "timing": {
+    "total_duration": 162.46375393867493
+  }
+}

@@ -5,15 +5,19 @@ meta {
 }
 
 get {
-  url: https://gamma-api.polymarket.com/markets?include_tag=true
+  url: https://gamma-api.polymarket.com/markets?include_tag=true&limit=100&volume_num_min=10000&liquidity_num_min=5000
   body: none
   auth: inherit
 }
 
 params:query {
   include_tag: true
+  limit: 100
+  volume_num_min: 10000
+  liquidity_num_min: 5000
 }
 
 settings {
   encodeUrl: false
+  timeout: 0
 }

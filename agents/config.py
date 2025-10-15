@@ -43,12 +43,6 @@ class FilterConfig(BaseModel):
         default=14, description="Maximum market age in days (2 weeks)"
     )
 
-    # Categories to focus on
-    focus_categories: list[str] = Field(
-        default=["Politics", "Business", "Technology", "Regulatory"],
-        description="Categories to focus research on",
-    )
-
     # Categories to exclude
     exclude_categories: list[str] = Field(
         default=["Sports", "Crypto", "Entertainment"],
@@ -158,10 +152,10 @@ class SchedulerConfig(BaseModel):
         default=50.0, description="Maximum daily API cost in USD"
     )
     max_markets_to_filter: int = Field(
-        default=25, description="Maximum markets to filter down to"
+        default=10, description="Maximum markets to filter down to"
     )
     max_markets_for_deep_research: int = Field(
-        default=8, description="Maximum markets for deep research"
+        default=3, description="Maximum markets for deep research"
     )
 
 
