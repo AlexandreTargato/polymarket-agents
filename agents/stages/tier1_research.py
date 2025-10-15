@@ -27,7 +27,9 @@ class Tier1Researcher:
 
     def __init__(self):
         self.config = config.research
-        self.anthropic_client = anthropic.Anthropic(api_key=config.api.anthropic_api_key)
+        self.anthropic_client = anthropic.Anthropic(
+            api_key=config.api.anthropic_api_key
+        )
         self.tavily_client = TavilyClient(api_key=config.api.tavily_api_key)
 
     def research_market(self, market: Market) -> Tier1Research:
@@ -47,6 +49,8 @@ class Tier1Researcher:
         # Step 1: Form search queries
         queries = self._form_search_queries(market)
         logger.debug(f"Generated queries: {queries}")
+
+        print(queries)
 
         # Step 2: Run searches
         sources = self._run_searches(queries)
@@ -117,9 +121,7 @@ Generate 2-3 search queries that would help research this question."""
                 max_tokens=200,
                 temperature=0.3,
                 system=system_prompt,
-                messages=[
-                    {"role": "user", "content": user_prompt}
-                ]
+                messages=[{"role": "user", "content": user_prompt}],
             )
 
             queries_text = response.content[0].text.strip()
@@ -153,9 +155,7 @@ Generate 2-3 search queries that would help research this question."""
                 # Use Tavily for web search (supports time filtering)
                 search_result = self.tavily_client.search(
                     query=query,
-                    search_depth="basic",
                     max_results=5,
-                    days=7,  # Prioritize last 7 days
                 )
 
                 for result in search_result.get("results", []):
@@ -181,7 +181,9 @@ Generate 2-3 search queries that would help research this question."""
                 continue
 
         # Sort by relevance and credibility
-        all_sources.sort(key=lambda s: (s.credibility, s.relevance_score or 0), reverse=True)
+        all_sources.sort(
+            key=lambda s: (s.credibility, s.relevance_score or 0), reverse=True
+        )
 
         # Limit to max sources
         return all_sources[: self.config.tier1_max_sources]
@@ -302,9 +304,7 @@ Provide your analysis."""
                 max_tokens=300,
                 temperature=0.2,
                 system=system_prompt,
-                messages=[
-                    {"role": "user", "content": user_prompt}
-                ]
+                messages=[{"role": "user", "content": user_prompt}],
             )
 
             summary = response.content[0].text.strip()
@@ -320,7 +320,9 @@ Provide your analysis."""
                 "new",
                 "latest",
             ]
-            recent_developments = any(keyword in summary.lower() for keyword in recent_keywords)
+            recent_developments = any(
+                keyword in summary.lower() for keyword in recent_keywords
+            )
 
             return {"summary": summary, "recent_developments": recent_developments}
 
@@ -331,7 +333,9 @@ Provide your analysis."""
                 "recent_developments": False,
             }
 
-    def _make_decision(self, market: Market, sources: list[Source], analysis: dict) -> dict:
+    def _make_decision(
+        self, market: Market, sources: list[Source], analysis: dict
+    ) -> dict:
         """
         Decide whether to proceed to Tier 2 research.
 
@@ -348,7 +352,9 @@ Provide your analysis."""
         preliminary_edge = None
 
         # Check 1: Do we have quality sources?
-        quality_sources = [s for s in sources if s.credibility >= self.config.min_source_quality]
+        quality_sources = [
+            s for s in sources if s.credibility >= self.config.min_source_quality
+        ]
         if len(quality_sources) < 2:
             reasoning_parts.append("Insufficient quality sources found")
             return {

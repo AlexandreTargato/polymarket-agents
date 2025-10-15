@@ -88,7 +88,7 @@ class Orchestrator:
             )[: config.scheduler.max_markets_to_filter]
 
             logger.info(
-                f"✓ Stage 2 complete: {len(filtered_markets)} markets after filtering ({stage_duration:.1f}s)"
+                f"✓ Stage 2 complete: {len(filtered_markets)} markets after filtering and capping ({stage_duration:.1f}s)"
             )
 
             # Stage 3: Tier 1 Research

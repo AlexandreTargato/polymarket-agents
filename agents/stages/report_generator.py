@@ -2,9 +2,8 @@
 
 import logging
 from datetime import datetime
-from typing import Optional
 
-from agents.models import Opportunity, EmailReport
+from agents.models import Opportunity
 
 logger = logging.getLogger(__name__)
 

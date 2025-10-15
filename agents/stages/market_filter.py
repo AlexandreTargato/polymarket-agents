@@ -30,7 +30,6 @@ class MarketFilter:
         Returns:
             List of filtered markets (15-25 expected).
         """
-        logger.info(f"Starting filtering with {len(markets)} markets")
 
         # Filter 1: Category Selection (can't be done via API)
         markets = self._filter_categories(markets)
@@ -39,7 +38,6 @@ class MarketFilter:
         # Filter 2: Question Type (can't be done via API)
         markets = self._filter_question_type(markets)
 
-        logger.info(f"Filtering complete: {len(markets)} markets remain")
         return markets
 
     def _filter_categories(self, markets: list[Market]) -> list[Market]:
@@ -50,27 +48,16 @@ class MarketFilter:
         Exclude: Sports, Crypto, Entertainment
         """
         filtered = []
-        for market in markets:
-            # If no category, try to infer or skip
-            if not market.category:
-                # Skip markets with unknown category to be conservative
-                continue
 
-            # Exclude unwanted categories
+        for market in markets:
             if market.category in self.config.exclude_categories:
                 continue
 
-            # If we have focus categories, only include those
-            if self.config.focus_categories:
-                if market.category in self.config.focus_categories:
-                    filtered.append(m)
-            else:
-                # If no focus categories specified, include all non-excluded
-                filtered.append(market)
+            filtered.append(market)
 
         logger.debug(
             f"Category: {len(filtered)}/{len(markets)} passed "
-            f"(focus={self.config.focus_categories}, exclude={self.config.exclude_categories})"
+            f"exclude={self.config.exclude_categories})"
         )
 
         return filtered

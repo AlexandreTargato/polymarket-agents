@@ -28,7 +28,6 @@ class MarketFetcher:
         Returns:
             List of Market objects.
         """
-        logger.info("Fetching filtered markets from Polymarket API...")
 
         start_date_min = (
             datetime.now(timezone.utc)
@@ -77,9 +76,6 @@ class MarketFetcher:
                     )
                     continue
 
-            logger.info(
-                f"Successfully fetched {len(markets)} markets (filtered by API)"
-            )
             return markets
 
         except httpx.HTTPError as e:

@@ -36,7 +36,9 @@ class Tier2Researcher:
 
     def __init__(self):
         self.config = config.research
-        self.anthropic_client = anthropic.Anthropic(api_key=config.api.anthropic_api_key)
+        self.anthropic_client = anthropic.Anthropic(
+            api_key=config.api.anthropic_api_key
+        )
         self.tavily_client = TavilyClient(api_key=config.api.tavily_api_key)
 
     def research_market(self, market: Market) -> Tier2Research:
@@ -114,45 +116,44 @@ class Tier2Researcher:
         for query in queries:
             try:
                 # Use Tavily with different time windows
-                for days in [7, 30, None]:  # Last week, last month, all time
-                    search_params = {
-                        "query": query,
-                        "search_depth": "advanced",
-                        "max_results": 5,
-                    }
-                    if days:
-                        search_params["days"] = days
+                search_params = {
+                    "query": query,
+                    "search_depth": "advanced",
+                    "max_results": 5,
+                }
 
-                    search_result = self.tavily_client.search(**search_params)
+                search_result = self.tavily_client.search(**search_params)
 
-                    for result in search_result.get("results", []):
-                        url = result.get("url")
-                        if url in seen_urls:
-                            continue
+                for result in search_result.get("results", []):
+                    url = result.get("url")
+                    if url in seen_urls:
+                        continue
 
-                        seen_urls.add(url)
+                    seen_urls.add(url)
 
-                        source = Source(
-                            url=url,
-                            title=result.get("title", ""),
-                            credibility=self._estimate_source_credibility(url),
-                            date=None,
-                            snippet=result.get("content", "")[:1000],
-                            relevance_score=result.get("score"),
-                        )
+                    source = Source(
+                        url=url,
+                        title=result.get("title", ""),
+                        credibility=self._estimate_source_credibility(url),
+                        date=None,
+                        snippet=result.get("content", "")[:1000],
+                        relevance_score=result.get("score"),
+                    )
 
-                        all_sources.append(source)
+                    all_sources.append(source)
 
-                    # Break after first successful search per query
-                    if search_result.get("results"):
-                        break
+                # Break after first successful search per query
+                if search_result.get("results"):
+                    break
 
             except Exception as e:
                 logger.warning(f"Search failed for query '{query}': {e}")
                 continue
 
         # Sort by credibility and relevance
-        all_sources.sort(key=lambda s: (s.credibility, s.relevance_score or 0), reverse=True)
+        all_sources.sort(
+            key=lambda s: (s.credibility, s.relevance_score or 0), reverse=True
+        )
 
         # Return top sources
         return all_sources[: self.config.tier2_max_sources]
@@ -195,9 +196,7 @@ Generate 5-8 comprehensive search queries."""
                 max_tokens=400,
                 temperature=0.4,
                 system=system_prompt,
-                messages=[
-                    {"role": "user", "content": user_prompt}
-                ]
+                messages=[{"role": "user", "content": user_prompt}],
             )
 
             queries_text = response.content[0].text.strip()
@@ -360,9 +359,7 @@ Provide your comprehensive analysis."""
                 max_tokens=2000,
                 temperature=0.2,
                 system=system_prompt,
-                messages=[
-                    {"role": "user", "content": user_prompt}
-                ]
+                messages=[{"role": "user", "content": user_prompt}],
             )
 
             analysis_text = response.content[0].text.strip()
@@ -395,16 +392,20 @@ Provide your comprehensive analysis."""
         # Try to extract risks section
         if "risk" in analysis_text.lower():
             risk_start = analysis_text.lower().find("risk")
-            risk_section = analysis_text[risk_start:risk_start + 500]
+            risk_section = analysis_text[risk_start : risk_start + 500]
             # Extract bullet points or numbered items
             import re
 
-            risks = re.findall(r"[-•\d]+[.)]\s*(.+?)(?=[-•\d]+[.)]|$)", risk_section, re.DOTALL)
+            risks = re.findall(
+                r"[-•\d]+[.)]\s*(.+?)(?=[-•\d]+[.)]|$)", risk_section, re.DOTALL
+            )
             sections["risks"] = [r.strip() for r in risks if r.strip()][:5]
 
         return sections
 
-    def _extract_findings(self, analysis: dict, sources: list[Source]) -> list[ResearchFinding]:
+    def _extract_findings(
+        self, analysis: dict, sources: list[Source]
+    ) -> list[ResearchFinding]:
         """
         Extract key findings from analysis.
 
@@ -467,9 +468,7 @@ Return JSON only."""
                 max_tokens=200,
                 temperature=0.1,
                 system=system_prompt,
-                messages=[
-                    {"role": "user", "content": user_prompt}
-                ]
+                messages=[{"role": "user", "content": user_prompt}],
             )
 
             import json
@@ -478,9 +477,15 @@ Return JSON only."""
 
             return ProbabilityEstimate(
                 yes_probability=float(result.get("yes_probability", 0.5)),
-                confidence_interval_low=float(result.get("confidence_interval_low", 0.4)),
-                confidence_interval_high=float(result.get("confidence_interval_high", 0.6)),
-                confidence_level=ConfidenceLevel(result.get("confidence_level", "medium")),
+                confidence_interval_low=float(
+                    result.get("confidence_interval_low", 0.4)
+                ),
+                confidence_interval_high=float(
+                    result.get("confidence_interval_high", 0.6)
+                ),
+                confidence_level=ConfidenceLevel(
+                    result.get("confidence_level", "medium")
+                ),
             )
 
         except Exception as e:
