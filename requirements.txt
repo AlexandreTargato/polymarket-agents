@@ -11,6 +11,9 @@ requests==2.32.3
 # Anthropic API
 anthropic==0.39.0
 
+# OpenAI API (optional, used if OPENAI_API_KEY is set)
+openai==1.52.2
+
 # Tavily Search API
 tavily-python==0.3.5
 

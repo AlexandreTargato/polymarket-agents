@@ -6,6 +6,11 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import anthropic
+from typing import Any
+try:
+    from openai import OpenAI  # type: ignore
+except Exception:  # OpenAI optional
+    OpenAI = None  # type: ignore
 from tavily import TavilyClient
 
 from agents.config import config
@@ -27,9 +32,13 @@ class Tier1Researcher:
 
     def __init__(self):
         self.config = config.research
-        self.anthropic_client = anthropic.Anthropic(
-            api_key=config.api.anthropic_api_key
-        )
+        self.use_openai = bool(getattr(config.api, "openai_api_key", None)) and OpenAI is not None
+        if self.use_openai:
+            self.openai_client = OpenAI(api_key=getattr(config.api, "openai_api_key", None))  # type: ignore
+        else:
+            self.anthropic_client = anthropic.Anthropic(
+                api_key=config.api.anthropic_api_key
+            )
         self.tavily_client = TavilyClient(api_key=config.api.tavily_api_key)
 
     def research_market(self, market: Market) -> Tier1Research:
@@ -114,15 +123,26 @@ Resolution Date: {market.end_date.strftime('%Y-%m-%d')}
 Generate 2-3 search queries that would help research this question."""
 
         try:
-            response = self.anthropic_client.messages.create(
-                model=self.config.tier1_model,
-                max_tokens=200,
-                temperature=0.3,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
-
-            queries_text = response.content[0].text.strip()
+            if self.use_openai:
+                response = self.openai_client.chat.completions.create(
+                    model=self.config.tier1_model_openai or "gpt-4o-mini",
+                    temperature=0.3,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    max_tokens=200,
+                )
+                queries_text = (response.choices[0].message.content or "").strip()
+            else:
+                response = self.anthropic_client.messages.create(
+                    model=self.config.tier1_model,
+                    max_tokens=200,
+                    temperature=0.3,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
+                queries_text = response.content[0].text.strip()
             queries = [q.strip() for q in queries_text.split("\n") if q.strip()]
 
             # Limit to configured number
@@ -244,15 +264,27 @@ Sources Found:
 Provide your analysis."""
 
         try:
-            response = self.anthropic_client.messages.create(
-                model=self.config.tier1_model,
-                max_tokens=300,
-                temperature=0.2,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
+            if self.use_openai:
+                response = self.openai_client.chat.completions.create(
+                    model=self.config.tier1_model_openai or "gpt-4o-mini",
+                    max_tokens=300,
+                    temperature=0.2,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                )
+                summary = (response.choices[0].message.content or "").strip()
+            else:
+                response = self.anthropic_client.messages.create(
+                    model=self.config.tier1_model,
+                    max_tokens=300,
+                    temperature=0.2,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
 
-            summary = response.content[0].text.strip()
+                summary = response.content[0].text.strip()
 
             # Check for keywords indicating recent developments
             recent_keywords = [

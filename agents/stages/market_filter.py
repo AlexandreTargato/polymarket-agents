@@ -49,15 +49,36 @@ class MarketFilter:
         """
         filtered = []
 
+        # Sports keywords to exclude
+        sports_keywords = [
+            'vs.', 'vs ', 'game', 'team', 'score', 'win', 'lose', 'match', 'tournament',
+            'championship', 'league', 'season', 'playoff', 'final', 'semifinal',
+            'quarterfinal', 'round', 'bracket', 'steelers', 'bengals', 'rams', 'jaguars',
+            'saints', 'bears', 'dolphins', 'browns', 'raiders', 'chiefs', 'eagles',
+            'vikings', 'panthers', 'jets', 'patriots', 'titans', 'giants', 'broncos',
+            'colts', 'chargers', 'packers', 'cardinals', 'commanders', 'cowboys',
+            'falcons', '49ers', 'buccaneers', 'lions', 'texans', 'seahawks',
+            'brewers', 'dodgers', 'blue jays', 'mariners', 'osaka', 'cristian',
+            'worlds', 'lol', 'esports', 'football', 'baseball', 'basketball',
+            'soccer', 'hockey', 'tennis', 'golf', 'boxing', 'mma', 'ufc'
+        ]
+
         for market in markets:
-            if market.category in self.config.exclude_categories:
+            # Check category if available
+            if market.category and market.category in self.config.exclude_categories:
+                continue
+            
+            # Check for sports keywords in question
+            question_lower = market.question.lower()
+            if any(keyword in question_lower for keyword in sports_keywords):
+                logger.debug(f"Excluding sports market: {market.question[:50]}...")
                 continue
 
             filtered.append(market)
 
         logger.debug(
             f"Category: {len(filtered)}/{len(markets)} passed "
-            f"exclude={self.config.exclude_categories})"
+            f"(excluded sports by keywords)"
         )
 
         return filtered

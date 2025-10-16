@@ -67,9 +67,11 @@ def validate_config():
     """Validate required configuration."""
     errors = []
 
-    # Check API keys
-    if not config.api.anthropic_api_key:
-        errors.append("ANTHROPIC_API_KEY not set")
+    # Check API keys: require at least one LLM provider
+    has_anthropic = bool(config.api.anthropic_api_key)
+    has_openai = bool(getattr(config.api, "openai_api_key", None))
+    if not (has_anthropic or has_openai):
+        errors.append("No LLM key set: set OPENAI_API_KEY or ANTHROPIC_API_KEY")
 
     if not config.api.tavily_api_key:
         errors.append("TAVILY_API_KEY not set")

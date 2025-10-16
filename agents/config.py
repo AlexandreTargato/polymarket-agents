@@ -71,6 +71,10 @@ class ResearchConfig(BaseModel):
     tier1_model: str = Field(
         default="claude-3-5-haiku-20241022", description="Model for Tier 1 analysis"
     )
+    # Optional OpenAI override models
+    tier1_model_openai: Optional[str] = Field(
+        default="gpt-4o-mini", description="OpenAI model for Tier 1 analysis"
+    )
 
     # Tier 2 (Deep) Research
     tier2_timeout_seconds: int = Field(
@@ -84,6 +88,14 @@ class ResearchConfig(BaseModel):
     )
     tier2_model: str = Field(
         default="claude-3-5-sonnet-20241022", description="Model for Tier 2 analysis"
+    )
+    # Optional Perplexity override model for Tier 2 deep research
+    tier2_model_perplexity: Optional[str] = Field(
+        default="sonar-deep-research", description="Perplexity model for Tier 2 analysis"
+    )
+    # Optional OpenAI override models
+    tier2_model_openai: Optional[str] = Field(
+        default="gpt-4o", description="OpenAI model for Tier 2 analysis"
     )
 
     # Research thresholds
@@ -164,6 +176,14 @@ class APIConfig(BaseModel):
 
     anthropic_api_key: str = Field(
         default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", "")
+    )
+    # OpenAI key (if set, system will use OpenAI instead of Anthropic)
+    openai_api_key: Optional[str] = Field(
+        default_factory=lambda: os.getenv("OPENAI_API_KEY")
+    )
+    # Perplexity key (if set, Tier 2 will use Sonar Deep Research)
+    perplexity_api_key: Optional[str] = Field(
+        default_factory=lambda: os.getenv("PERPLEXITY_API_KEY")
     )
     tavily_api_key: str = Field(default_factory=lambda: os.getenv("TAVILY_API_KEY", ""))
     newsapi_api_key: Optional[str] = Field(

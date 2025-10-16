@@ -6,6 +6,11 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import anthropic
+import requests
+try:
+    from openai import OpenAI  # type: ignore
+except Exception:
+    OpenAI = None  # type: ignore
 from tavily import TavilyClient
 
 from agents.config import config
@@ -36,9 +41,16 @@ class Tier2Researcher:
 
     def __init__(self):
         self.config = config.research
-        self.anthropic_client = anthropic.Anthropic(
-            api_key=config.api.anthropic_api_key
-        )
+        self.use_perplexity = bool(getattr(config.api, "perplexity_api_key", None))
+        self.use_openai = (not self.use_perplexity) and bool(getattr(config.api, "openai_api_key", None)) and OpenAI is not None
+        if self.use_perplexity:
+            self.perplexity_api_key = getattr(config.api, "perplexity_api_key", None)
+        elif self.use_openai:
+            self.openai_client = OpenAI(api_key=getattr(config.api, "openai_api_key", None))  # type: ignore
+        else:
+            self.anthropic_client = anthropic.Anthropic(
+                api_key=config.api.anthropic_api_key
+            )
         self.tavily_client = TavilyClient(api_key=config.api.tavily_api_key)
 
     def research_market(self, market: Market) -> Tier2Research:
@@ -191,15 +203,27 @@ Resolution Date: {market.end_date.strftime('%Y-%m-%d')}
 Generate 5-8 comprehensive search queries."""
 
         try:
-            response = self.anthropic_client.messages.create(
-                model=self.config.tier2_model,
-                max_tokens=400,
-                temperature=0.4,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
+            if self.use_openai:
+                response = self.openai_client.chat.completions.create(
+                    model=self.config.tier2_model_openai or "gpt-4o",
+                    max_tokens=400,
+                    temperature=0.4,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                )
+                queries_text = (response.choices[0].message.content or "").strip()
+            else:
+                response = self.anthropic_client.messages.create(
+                    model=self.config.tier2_model,
+                    max_tokens=400,
+                    temperature=0.4,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
 
-            queries_text = response.content[0].text.strip()
+                queries_text = response.content[0].text.strip()
             queries = [q.strip() for q in queries_text.split("\n") if q.strip()]
 
             # Ensure we have at least one negative query
@@ -303,15 +327,44 @@ RESEARCH SOURCES:
 Provide your comprehensive analysis."""
 
         try:
-            response = self.anthropic_client.messages.create(
-                model=self.config.tier2_model,
-                max_tokens=2000,
-                temperature=0.2,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
+            if self.use_perplexity:
+                # Use Perplexity Sonar Deep Research for deep analysis
+                headers = {
+                    "Authorization": f"Bearer {self.perplexity_api_key}",
+                    "Content-Type": "application/json",
+                }
+                payload = {
+                    "model": config.research.tier2_model_perplexity or "sonar-deep-research",
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                }
+                resp = requests.post("https://api.perplexity.ai/chat/completions", headers=headers, json=payload, timeout=600)
+                resp.raise_for_status()
+                data = resp.json()
+                analysis_text = (data.get("choices", [{}])[0].get("message", {}).get("content") or "").strip()
+            elif self.use_openai:
+                response = self.openai_client.chat.completions.create(
+                    model=self.config.tier2_model_openai or "gpt-4o",
+                    max_tokens=2000,
+                    temperature=0.2,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                )
+                analysis_text = (response.choices[0].message.content or "").strip()
+            else:
+                response = self.anthropic_client.messages.create(
+                    model=self.config.tier2_model,
+                    max_tokens=2000,
+                    temperature=0.2,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
 
-            analysis_text = response.content[0].text.strip()
+                analysis_text = response.content[0].text.strip()
 
             # Parse the analysis (simple parsing for now)
             return self._parse_analysis(analysis_text)
@@ -412,17 +465,46 @@ Extract the probability estimate for the FIRST outcome ("{market.outcomes[0]}").
 Return JSON only."""
 
         try:
-            response = self.anthropic_client.messages.create(
-                model=self.config.tier2_model,
-                max_tokens=200,
-                temperature=0.1,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
+            if self.use_perplexity:
+                headers = {
+                    "Authorization": f"Bearer {self.perplexity_api_key}",
+                    "Content-Type": "application/json",
+                }
+                payload = {
+                    "model": config.research.tier2_model_perplexity or "sonar-deep-research",
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                }
+                resp = requests.post("https://api.perplexity.ai/chat/completions", headers=headers, json=payload, timeout=300)
+                resp.raise_for_status()
+                data = resp.json()
+                import json
+                result = json.loads((data.get("choices", [{}])[0].get("message", {}).get("content") or "{}"))
+            elif self.use_openai:
+                response = self.openai_client.chat.completions.create(
+                    model=self.config.tier2_model_openai or "gpt-4o",
+                    max_tokens=200,
+                    temperature=0.1,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                )
+                import json
+                result = json.loads((response.choices[0].message.content or "{}"))
+            else:
+                response = self.anthropic_client.messages.create(
+                    model=self.config.tier2_model,
+                    max_tokens=200,
+                    temperature=0.1,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
 
-            import json
-
-            result = json.loads(response.content[0].text)
+                import json
+                result = json.loads(response.content[0].text)
 
             return ProbabilityEstimate(
                 yes_probability=float(result.get("yes_probability", 0.5)),
